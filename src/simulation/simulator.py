@@ -8,7 +8,7 @@
 from domain import Domain
 
 
-def simulate():
+def simulates():
     ## 初始化一个领域
     d = Domain()
     d.go_to_year(8)

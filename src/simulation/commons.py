@@ -493,12 +493,8 @@ def simulate(length=100):
 
 
 if __name__ == '__main__':
-    length = 60
+    length = 100
     simulate(length=length)
-    # simulate(mode='random',length=length)
-    # simulate(mode='top',length=length)
-    # simulate(mode='prop',length=length)
-
 
 
 

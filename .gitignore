@@ -7,8 +7,9 @@ __pycache__/
 *.so
 .DS_Store
 
-src/simulation/data/*
+
 src/simulation/fig/*
+src/simulation/data/*
 
 # Distribution / packaging
 .Python
