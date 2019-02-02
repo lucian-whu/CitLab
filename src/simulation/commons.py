@@ -472,7 +472,7 @@ def simulate_citation(year_news,year_ends,author_year_articles,mode='ALL',length
         json_file.write('\n'.join(lines)+'\n')
 
     json_file.close()
-    print 'simulation done, %d articles are writen.'.format(len(_ALL_articles_ids))
+    print 'simulation done, {:} articles are writen.'.format(len(_ALL_articles_ids))
 
 
 
@@ -492,9 +492,8 @@ def simulate(length=100):
     simulate_citation(year_news,year_ends,author_year_articles,'ALL',length)
 
 
-
 if __name__ == '__main__':
-    length = 120
+    length = 60
     simulate(length=length)
     # simulate(mode='random',length=length)
     # simulate(mode='top',length=length)

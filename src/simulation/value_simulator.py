@@ -398,6 +398,19 @@ def compare_citation_dis():
 
     print 'compare:',fit.distribution_compare('power_law', 'exponential')
 
+
+    ## total num
+    total_num = len(values)
+
+    low_num = len([v for v in values if v <10])
+    mid_num = len([v for v in values if v>=10 and v <100])
+    high_num = len([v for v in values if v>=100])
+
+    print 'low:',low_num/float(total_num)
+    print 'midum:',mid_num/float(total_num)
+    print 'high:',high_num/float(total_num)
+
+
     cn_counter = Counter(values)
 
     xs = []

@@ -311,6 +311,18 @@ def validate_simulation(mode,length):
     print fit.power_law.xmin
     print 'compare:',fit.distribution_compare('power_law', 'exponential')
 
+    ## citation nums
+
+    total_num = len(citation_nums)
+
+    low_num = len([v for v in citation_nums if v <10])
+    mid_num = len([v for v in citation_nums if v>=10 and v <100])
+    high_num = len([v for v in citation_nums if v>=100])
+    print '========= MODE:',mode
+    print 'low:',low_num/float(total_num)
+    print 'midum:',mid_num/float(total_num)
+    print 'high:',high_num/float(total_num)
+
     num_dict = Counter(citation_nums)
     xs = []
     ys = []
@@ -439,15 +451,12 @@ def validate_simulation(mode,length):
 
 if __name__ == '__main__':
     # simulated_data_viz()
+    length = 60
     # validate_simulation('ALL',length)
-    # validate_simulation('random',length)
+
+    validate_simulation('random',length)
 
     # validate_simulation('top',length)
 
     # validate_simulation('prop',length)
 
-    # validate_simulation(mode='random')
-
-    # validate_simulation(mode='top')
-
-    # validate_simulation(mode='prop')

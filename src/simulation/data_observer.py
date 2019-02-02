@@ -52,7 +52,7 @@ def extract_from_metadata():
     max_year= 0
     min_year= 3000
     author_year_articles = defaultdict(lambda:defaultdict(list))
-    authornum_dis = defaultdict(int)
+    authorAPS = defaultdict(int)
     progress = 0
     empty_authors = 0
     for article_path in list_metadata():
@@ -1161,7 +1161,7 @@ if __name__ == '__main__':
     # ## 生成数据
     # extract_from_metadata()
     # ## 画图
-    delta_num()
+    # delta_num()
 
     # author_productivity()
     # compare_plots()
