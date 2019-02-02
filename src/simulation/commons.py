@@ -28,7 +28,7 @@ prod_new_xs = prod_xs[1:]
 prod_new_probs = np.array(prod_probs[1:])/np.sum(prod_probs[1:])
 
 ## 每一篇论文的价值系数lambda的抽样
-lambda_dis = json.loads(open('data/lambda_dis.json').read())
+lambda_dis = json.loads(open('lambda_dis.json').read())
 lambda_list =lambda_dis['x']
 lambda_probs = lambda_dis['y']
 
