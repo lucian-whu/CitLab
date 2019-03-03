@@ -156,7 +156,7 @@ class PARAM:
                 continue
 
             rel = self.topic_relevance_matrix[topic][t2]
-            value_coef = trans(rel)
+            value_coef = self.trans(rel)
 
             topic_kgs[t2] = value_coef*kg
 
