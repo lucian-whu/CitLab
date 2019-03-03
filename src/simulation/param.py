@@ -10,6 +10,7 @@ import powerlaw
 import time
 import argparse
 from scipy.stats import lognorm
+import copy
 
 
 ## 模型中所有的参数以及使用方法
@@ -169,9 +170,9 @@ class PARAM:
 
         tn = len(_ALL_articles_ids)
         ## 确定需要阅读的论文数量在150到450篇论文之间
-        rn = np.random.normal(300,50,1)[0]
+        rn = int(np.random.normal(300,50,1)[0])
         ## totoal num
-        article_indexes = np.arange(tn)
+        article_indexes = range(tn)
 
         if tn<rn:
             return article_indexes,_ALL_articles_ids,_article_kgs,_article_kg_probs
@@ -190,9 +191,11 @@ class PARAM:
                     _same_probs[article_index] = 0
 
             _article_kg_probs_copy = _article_kg_probs_copy/np.sum(_article_kg_probs_copy)
-            _same_probs = _same_probs/np.sum(_same_probs)
+            _same_probs = np.array(_same_probs)/float(np.sum(_same_probs))
 
-
+            # print _article_kg_probs_copy
+            # print article_indexes
+            # print rn
             if PR=='PROP':
                 ## 根据概率随机选择
                 selected_indexes = np.random.choice(article_indexes,size=rn,p=_article_kg_probs_copy,replace=False)

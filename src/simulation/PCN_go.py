@@ -16,9 +16,10 @@ import copy
 ## 所有仿真
 def simulate_CN(arg):
 
+    modes = ['ST-ALL','ST-PROP','ST-TOP','ST-RND','MT-ALL','MT-PROP','MT-TOP','MT-RND']
+
     ## 参数对象
     paramObj = PARAM(arg)
-
     ## 对作者数量的仿真
     year_news,year_ends = simulate_authors(paramObj)
 
@@ -26,9 +27,19 @@ def simulate_CN(arg):
 
     author_year_articles = simulate_author_writting_papers(year_news,year_ends,paramObj)
 
-    ## 对引用论文的仿真
-    simulate_citations(year_news,year_ends,author_year_articles,paramObj)
 
+    if arg.all_mode:
+        ## 对引用论文的仿真
+        for mode in modes:
+            arg.mode = mode
+            paramObj = PARAM(arg)
+
+            print '========simulate mode:',mode
+            simulate_citations(year_news,year_ends,author_year_articles,paramObj)
+    else:
+        paramObj = PARAM(arg)
+
+        simulate_citations(year_news,year_ends,author_year_articles,paramObj)
 
 ### 对论文数量过程进行仿真按照不同的模式进行引用
 ## --------------
@@ -37,6 +48,7 @@ def simulate_citations(year_news,year_ends,author_year_articles,paramObj):
 
     # mode e.g. ST-ALL, 用于命名
     mode = paramObj.mode
+    print '-----',mode
     ## 模型名 有两个模型ST, MT
     model = paramObj.MD
     ## 个人阅读规则 ALL, RND, TOP, PROP
@@ -401,7 +413,10 @@ if __name__ == '__main__':
     ## 初始文献熟练
     parser.add_argument('-i','--initial_value',dest='initial_value',type=int,default=100,help='set initail value of papers, default is 100.')
     ## 排除已读
-    parser.add_argument('-x','--exclude_read',action='store_true',dest='exclude_read',default=True,help='set initail value of papers, default is 100.')
+    parser.add_argument('-x','--exclude_read',action='store_true',dest='exclude_read',default=True,help='whether exclude read papers.')
+
+    ## 排除已读
+    parser.add_argument('-A','--all_mode',action='store_true',dest='all_mode',default=False,help='all mode used to compare all modes')
 
     arg = parser.parse_args()
 
