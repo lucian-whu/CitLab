@@ -35,11 +35,11 @@ lambda_probs = lambda_dis['y']
 ## 人数增减指数函数参数
 AUTHOR_INCREASE_FUNC_PARAS = [4.4786305,0.05994124]
 
-
 ## 每篇论文平均参考文献数量
 ## N_REF = 30
 def N_REF():
     return int(np.random.normal(30, 5, 1)[0])
+
 
 
 def gen_id():
@@ -86,7 +86,6 @@ def ID(mean):
 ## 价值增长函数, 先初始化为一个随机函数
 def knowledge_gain_coef(num):
     return np.random.choice(lambda_list,size=num,p=lambda_probs,replace=True)
-
 
 
 ### 每一个作者生产力的随机项
@@ -430,16 +429,23 @@ def simulate_citation(year_news,year_ends,author_year_articles,mode='ALL',length
                     ref_list = []
                     ## 知识增益设置为100
                     kg= 100
+                    _lambda_cof = 1
+                    refv = 0
 
                 else:
                     ##在个人论文库中，根据kgs选择参考文献
                     # print np.sum(_personal_kg_probs)
                     ref_list,ref_kgs = cit_based_on_prob(_personal_articles,_personal_kgs,_personal_kg_probs)
                     kg = np.mean(ref_kgs)*lambdas[aindex]
+                    _lambda_cof = lambdas[aindex]
+                    refv = np.mean(ref_kgs)
+
 
                 ## 存储该文章
                 articleObj = {}
                 articleObj['id'] = aid
+                articleObj['lambda'] = _lambda_cof
+                articleObj['refv'] = refv
                 articleObj['author'] = author
                 articleObj['kg'] = kg
                 articleObj['refs'] = ref_list
@@ -493,7 +499,7 @@ def simulate(length=100):
 
 
 if __name__ == '__main__':
-    length = 100
+    length = 50
     simulate(length=length)
 
 

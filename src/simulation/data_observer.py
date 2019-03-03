@@ -55,6 +55,8 @@ def extract_from_metadata():
     authorAPS = defaultdict(int)
     progress = 0
     empty_authors = 0
+    authornum_dis = defaultdict(int)
+
     for article_path in list_metadata():
         article_json = json.loads(open(article_path).read())
         pid,authors,date,atype,affiliations = extract_author_info(article_json)
@@ -1070,96 +1072,12 @@ def ID_plot():
 
 
 
-def compare_plots():
-    author_year_articles = json.loads(open(AUTHOR_JSON_PATH).read())
-
-    ## 所有作者的文章总数量
-    tnas = []
-
-    ## 领域内作者总数量
-    year_an = defaultdict(int)
-
-    ## 领域内文章总数量
-    year_pn = defaultdict(list)
-
-    ## 对于每一位作者来讲
-    for author in author_year_articles.keys():
-
-        total_num_of_articles = 0
-        ## 每一年
-        for i,year in enumerate(sorted(author_year_articles[author].keys(),key=lambda x:int(x))):
-
-            ##第一年是作者进入的年
-            if i==0:
-                year_an[int(year)]+=1
-
-            ## 文章数量
-            num_of_articles = len(author_year_articles[author][year])
-
-            total_num_of_articles+=num_of_articles
-
-            year_pn[int(year)].append(num_of_articles)
-
-        tnas.append(total_num_of_articles)
-
-    ## 随着时间的增长领域内论文总数量
-    xs = []
-    ys = []
-    an_ys = []
-    total_pn = 0
-    total_an = 0
-    for year in sorted(year_pn.keys()):
-        xs.append(year)
-        total_pn+=np.sum(year_pn[year])
-
-        total_an += year_an[year]
-        an_ys.append(total_an)
-        ys.append(total_pn)
-
-
-    plt.figure(figsize=(5,4))
-
-    plt.plot(xs,ys,label=u'文章总数')
-    plt.plot(xs,an_ys,'--',label=u'作者总数')
-
-    plt.xlabel(u'年份',fontproperties='SimHei')
-    plt.ylabel(u'论文数量',fontproperties='SimHei')
-    plt.title('APS')
-    # plt.xscale('log')
-    plt.yscale('log')
-    plt.legend(prop={'family':'SimHei','size':8})
-
-    plt.tight_layout()
-    plt.savefig('fig/compare_pn.png',dpi=400)
-    print 'simulation of total papers saved to fig/compare_pn.png'
-
-    ## 画出作者的文章总数量分布
-    tn_dict = Counter(tnas)
-    xs = []
-    ys = []
-    for tn in sorted(tn_dict.keys()):
-
-        xs.append(tn)
-        ys.append(tn_dict[tn])
-
-    print xs,ys
-    plt.figure(figsize=(5,4))
-    plt.plot(xs,ys,'o',fillstyle='none')
-    plt.xlabel(u'作者文章总数量',fontproperties='SimHei')
-    plt.ylabel(u'作者数',fontproperties='SimHei')
-    plt.xscale('log')
-    plt.yscale('log')
-    plt.title('APS')
-    plt.tight_layout()
-    plt.savefig('fig/compare_tn.png',dpi=400)
-    print 'data saved to fig/compare_tn.png'
-
 
 
 if __name__ == '__main__':
 
     # ## 生成数据
-    # extract_from_metadata()
+    extract_from_metadata()
     # ## 画图
     # delta_num()
 
