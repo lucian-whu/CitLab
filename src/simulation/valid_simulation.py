@@ -194,6 +194,7 @@ def validate_simulation(mode,length):
     ## 读数据
 
     print 'MODE:',mode,',Length:',length
+    tit = mode
 
     if mode =='ALL':
         tit = u'仿真'
@@ -203,6 +204,10 @@ def validate_simulation(mode,length):
         tit = 'PCN-III'
     elif mode == 'prop':
         tit = 'PCN-IV'
+
+    # import os
+    # os
+
 
     ref_dict = defaultdict(int)
     ##文献在各年份被引次数
@@ -364,38 +369,38 @@ def validate_simulation(mode,length):
     # ------------------
     # 随机选择 20个作者，每个作者论文数量大于30, 查看其
     # ------------------
-    author_candidates = [author for author in author_paper_num.keys() if author_paper_num[author]>30]
+    # author_candidates = [author for author in author_paper_num.keys() if author_paper_num[author]>30]
 
-    authors = np.random.choice(author_candidates,size=20,replace=False)
+    # authors = np.random.choice(author_candidates,size=20,replace=False)
 
-    ig,axes = plt.subplots(4,5,figsize=(25,20))
-    for ai,author in enumerate(authors):
+    # ig,axes = plt.subplots(4,5,figsize=(25,20))
+    # for ai,author in enumerate(authors):
 
-        ref_dict = author_ref_num[author]
+    #     ref_dict = author_ref_num[author]
 
 
-        refs = sorted(ref_dict.keys(),key=lambda x:ref_dict[x],reverse=True)
+    #     refs = sorted(ref_dict.keys(),key=lambda x:ref_dict[x],reverse=True)
 
-        xs = []
-        ys = []
+    #     xs = []
+    #     ys = []
 
-        for r,ref in enumerate(refs):
-            xs.append(r+1)
-            ys.append(ref_dict[ref])
+    #     for r,ref in enumerate(refs):
+    #         xs.append(r+1)
+    #         ys.append(ref_dict[ref])
 
-        ax = axes[ai/5,ai%5]
+    #     ax = axes[ai/5,ai%5]
 
-        ax.plot(xs,ys,'o',label=u'论文数=%d'%author_paper_num[author])
+    #     ax.plot(xs,ys,'o',label=u'论文数=%d'%author_paper_num[author])
 
-        # ax.set_xscale('log')
-        # ax.set_yscale('log')
-        ax.legend(prop={'family':'SimHei','size':8})
+    #     # ax.set_xscale('log')
+    #     # ax.set_yscale('log')
+    #     ax.legend(prop={'family':'SimHei','size':8})
 
-        # ax.tight_layout()
-    plt.tight_layout()
-    plt.savefig('fig/simulated_author_ref_dis_{:}_{:}.png'.format(mode,length),dpi=400)
-    print 'fig saved to fig/simulated_author_ref_dis.png'
-    # return
+    #     # ax.tight_layout()
+    # plt.tight_layout()
+    # plt.savefig('fig/simulated_author_ref_dis_{:}_{:}.png'.format(mode,length),dpi=400)
+    # print 'fig saved to fig/simulated_author_ref_dis.png'
+    # # return
 
 
 
@@ -630,15 +635,15 @@ def validate_simulation(mode,length):
     print 'fig saved to fig/validation/simulated_high_life_length_dis_over_year.png'
 
 
-
-
-
-
 if __name__ == '__main__':
     # simulated_data_viz()
     length = 100
-    validate_simulation('ALL',length)
+    # validate_simulation('ST-PROP',length,50)
+    # validate_simulation('ST-TOP',length,50)
+    # validate_simulation('ST-RND',length,50)
+    # validate_simulation('ST-ALL',length,50)
 
+    validate_simulation('ALL',length)
     # validate_simulation('random',length)
 
     # validate_simulation('top',length)

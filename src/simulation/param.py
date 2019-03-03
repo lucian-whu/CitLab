@@ -79,8 +79,13 @@ class PARAM:
             _lambda = np.random.choice(topic_lambda_dis['x'],size=1,p=topic_lambda_dis['y'])[0]
             _sigma = np.random.choice(topic_sigma_dis['x'],size=1,p=topic_sigma_dis['y'])[0]
 
+
+
             ## 根据两个值计算出lognorm的
             _scale = (np.log(_lambda)+_sigma**2)**2
+
+            print topic,_lambda,_sigma,_scale
+
 
             ## 使用 lognorm 计算x以及y值
             xs = np.linspace(0.0001,20,10000)

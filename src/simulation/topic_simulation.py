@@ -903,7 +903,7 @@ def topic_values():
 
     scale,loc,sigma,mu,mode = fit_lognorm(x0s)
 
-    fit_x = np.linspace(0,0.5,1000)
+    fit_x = np.linspace(0.05,0.2,100)
     fit_y = scipy.stats.lognorm.pdf(fit_x, sigma, loc=0, scale=scale)
     fit_y = np.array(fit_y)/np.sum(fit_y)
     lambda_dis = {}
@@ -940,7 +940,7 @@ def topic_values():
 
     scale,loc,sigma,mu,mode = fit_lognorm(sigmas)
 
-    fit_x = np.linspace(0,0.5,1000)
+    fit_x = np.linspace(0.5,1.5,100)
     fit_y = scipy.stats.lognorm.pdf(fit_x, sigma, loc=0, scale=scale)
     fit_y = np.array(fit_y)/np.sum(fit_y)
     sigma_dis = {}
@@ -1056,10 +1056,10 @@ if __name__ == '__main__':
 
     ## 主题转化率
     # gen_pid_topic_cits()
-    trans_rate()
+    # trans_rate()
 
     ## 价值系数分布
-    # topic_values()
+    topic_values()
 
     ## 作者主题选择概率
     # author_topic_selection()

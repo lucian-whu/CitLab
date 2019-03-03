@@ -471,8 +471,8 @@ def ref_cit_relations():
     lambda_dis['y'] = list(pdf_fitted_ys)
     # print 'X:',fitted_xs[sorted(range(len(fitted_xs)),key=lambda x:pdf_fitted_ys[x],reverse=True)[0]]
     print 'length of lambdas',len(xs),min(xs),max(xs)
-    open('data/lambda_dis.json','w').write(json.dumps(lambda_dis))
-    print 'data saved to data/lambda_dis.json'
+    open('lambda_dis.json','w').write(json.dumps(lambda_dis))
+    print 'data saved to lambda_dis.json'
 
 
     plt.figure(figsize=(4,3.2))
@@ -708,9 +708,9 @@ if __name__ == '__main__':
 
     # gen_dataset()
 
-    # ref_cit_relations()
+    ref_cit_relations()
 
-    year_lambdas()
+    # year_lambdas()
 
     # compare_citation_dis()
 
