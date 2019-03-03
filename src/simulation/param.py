@@ -9,7 +9,7 @@ from tools.basic_config import *
 import powerlaw
 import time
 import argparse
-import scipy
+from scipy.stats import lognorm
 
 
 ## 模型中所有的参数以及使用方法
@@ -83,7 +83,7 @@ class PARAM:
 
             ## 使用 lognorm 计算x以及y值
             xs = np.linspace(0.0001,20,10000)
-            ys = scipy.stats.lognorm.pdf(xs, _sigma, loc=0, scale=_scale)
+            ys = lognorm.pdf(xs, _sigma, loc=0, scale=_scale)
             ys = np.array(ys)/np.sum(ys)
 
             self._topic_lambda_dis[topic]=[xs,ys]

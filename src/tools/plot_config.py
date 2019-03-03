@@ -12,8 +12,8 @@ import matplotlib as mpl
 import matplotlib.colors as colors
 from cycler import cycler
 import pylab
-
-
+import seaborn as sns
+import pandas as pd
 
 #### 显示中文的设置
 reload(sys)
@@ -216,4 +216,29 @@ def plot_multi_lines_from_two_data(fig_data,ax=None):
 def hist_2_bar(data,bins=50):
     n,bins,patches = plt.hist(data,bins=bins)
     return [x for x in bins[:-1]],[x for x in n]
+
+
+
+def plot_heatmap(path,title,xlabel,ylabel,outpath):
+    data = pd.read_csv(path)
+    df = pd.pivot_table(data=data,
+                    index='t2',
+                    values='rel',
+                    columns='t1')
+    plt.figure(figsize=(7.5,6))
+    ax = sns.heatmap(df,cmap='YlGnBu',robust=True,square=False,annot=True,fmt='0.2f',annot_kws={'size':4},vmin=0,vmax = 0.8)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation = 90)
+    # plt.title(title,y=1.15)
+    ax.xaxis.tick_top()
+
+    # plt.xticks(rotation=0)
+
+    ax.set_xlabel(xlabel,fontproperties='SimHei')
+    ax.set_ylabel(ylabel,fontproperties='SimHei')
+
+    # plt.xlabel()
+    plt.tight_layout()
+    plt.savefig(outpath,dpi=800)
+
+
 
