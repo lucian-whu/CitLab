@@ -155,7 +155,7 @@ class PARAM:
             if topic==t2:
                 continue
 
-            rel = topic_relevance_matrix[topic][t2]
+            rel = self.topic_relevance_matrix[topic][t2]
             value_coef = trans(rel)
 
             topic_kgs[t2] = value_coef*kg
