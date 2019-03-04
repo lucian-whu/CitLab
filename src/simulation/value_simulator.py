@@ -464,10 +464,11 @@ def ref_cit_relations():
 
     ## 根据拟合的lognorm进行概率计算，存储到文件用于仿真
     lambda_dis = {}
-    fitted_xs = np.linspace(0.001,25,10000)
-    pdf_fitted = scipy.stats.lognorm.pdf(fitted_xs, sigma, loc=0, scale=scale)
+    fitted_xs = np.arange(0.001,20,0.001)
+
+    pdf_fitted = scipy.stats.lognorm.pdf(xs, sigma, loc=0, scale=scale)
     pdf_fitted_ys = np.array(pdf_fitted)/np.sum(pdf_fitted)
-    lambda_dis['x'] = list(fitted_xs*(_max_c10/_max_refv))
+    lambda_dis['x'] = list(np.array(xs)*_base_lambda)
     lambda_dis['y'] = list(pdf_fitted_ys)
     # print 'X:',fitted_xs[sorted(range(len(fitted_xs)),key=lambda x:pdf_fitted_ys[x],reverse=True)[0]]
     print 'length of lambdas',len(xs),min(xs),max(xs)

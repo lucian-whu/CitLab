@@ -20,6 +20,8 @@ def simulate_CN(arg):
 
     ## 参数对象
     paramObj = PARAM(arg)
+    paramObj.init_param()
+
     ## 对作者数量的仿真
     year_news,year_ends = simulate_authors(paramObj)
 
@@ -31,14 +33,10 @@ def simulate_CN(arg):
     if arg.all_mode:
         ## 对引用论文的仿真
         for mode in modes:
-            arg.mode = mode
-            paramObj = PARAM(arg)
-
+            paramObj.set_mode(mode)
             print '========simulate mode:',mode
             simulate_citations(year_news,year_ends,author_year_articles,paramObj)
     else:
-        paramObj = PARAM(arg)
-
         simulate_citations(year_news,year_ends,author_year_articles,paramObj)
 
 ### 对论文数量过程进行仿真按照不同的模式进行引用

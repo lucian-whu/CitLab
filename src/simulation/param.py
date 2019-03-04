@@ -35,6 +35,14 @@ class PARAM:
         ##
         self.exclude_read = arg.exclude_read
 
+    def set_mode(self,mode):
+        self.mode = mode
+        ## model分为三个部分，模型，阅读规则
+        self.MD,self.PR = self.mode.split('-')
+
+
+    def init_param(self):
+
         ## 研究周期分布函数，每个人的研究周期使用该函数进行随机抽样
         rs_dis = json.loads(open('rs_dis.json').read())
         self.rs_xs = [int(i) for i in rs_dis['x']]
@@ -82,13 +90,14 @@ class PARAM:
 
 
             ## 根据两个值计算出lognorm的
-            _scale = (np.log(_lambda)+_sigma**2)**2
+            _scale = np.exp(np.log(_lambda)+_sigma**2)
 
             print topic,_lambda,_sigma,_scale
 
 
             ## 使用 lognorm 计算x以及y值
-            xs = np.linspace(0.0001,20,10000)
+            xs = list(np.arange(0.001,1,0.001))
+            xs.extend(list(np.arange(1,40,0.1)))
             ys = lognorm.pdf(xs, _sigma, loc=0, scale=_scale)
             ys = np.array(ys)/np.sum(ys)
 
@@ -96,7 +105,37 @@ class PARAM:
 
         ## 加载整体的lambda_dis
         lambda_dis = json.loads(open('lambda_dis.json').read())
-        self._topic_lambda_dis['ST'] =[lambda_dis['x'],lambda_dis['y']]
+        _lambda = 0.091
+        _sigma = 1.11
+        _scale = np.exp(np.log(_lambda)+_sigma**2)
+        xs = list(np.arange(0.001,1,0.001))
+        xs.extend(list(np.arange(1,40,0.1)))
+        ys = lognorm.pdf(xs, _sigma, loc=0, scale=_scale)
+        ys = np.array(ys)/np.sum(ys)
+        self._topic_lambda_dis['ST'] =[xs,ys]
+
+        ## 把所有topic的lambda分布画出来
+        all_ts = self._topic_lambda_dis.keys()
+        num_ts = len(all_ts)
+        fig,axes = plt.subplots(num_ts/2+1,2,figsize=(8,(num_ts/2+1)*4))
+        for i,t in enumerate(sorted(all_ts)):
+
+            x,y = self._topic_lambda_dis[t]
+
+            ax = axes[i/2,i%2]
+
+            ax.plot(x,y)
+
+            ax.set_xscale('log')
+            ax.set_yscale('log')
+
+            ax.set_title(t)
+
+        plt.tight_layout()
+
+        plt.savefig('fig/param/lambda_dis.png',dpi=200)
+        print 'lambda distribution used saved to fig/param/lambda_dis.png.'
+
 
 
     ## 价值转移函数参数,根据相关性计算的转化比
