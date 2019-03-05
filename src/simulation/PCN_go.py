@@ -16,7 +16,7 @@ import copy
 ## 所有仿真
 def simulate_CN(arg):
 
-    modes = ['ST-ALL','ST-PROP','ST-TOP','ST-RND','MT-ALL','MT-PROP','MT-TOP','MT-RND']
+    modes = ['ST-ALL','MT-ALL','ST-PROP','ST-TOP','ST-RND','MT-PROP','MT-TOP','MT-RND']
 
     ## 参数对象
     paramObj = PARAM(arg)
