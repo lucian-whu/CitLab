@@ -152,7 +152,9 @@ def simulate_citations(year_news,year_ends,author_year_articles,paramObj):
 
                     ## 第一年没有文章读,从去年
                     _read_indexes,_read_papers,_read_kgs,_read_kg_probs =  paramObj.read_papers(_ALL_articles_ids,_article_kgs,_article_kg_probs,_read_indexes,PR, paramObj.exclude_read)
-                    _author_topic_papers[aid][model_topic] = [_read_indexes,_read_papers,_read_kgs,_read_kg_probs]
+                    ## 只有不是全部数据的时候才有必要寸存储，全部数据存储可能导致内存不足
+                    if PR!='ALL':
+                        _author_topic_papers[aid][model_topic] = [_read_indexes,_read_papers,_read_kgs,_read_kg_probs]
 
                     ##在个人论文库中，根据kgs选择参考文献
                     ### -------------------------

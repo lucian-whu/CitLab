@@ -1096,7 +1096,7 @@ if __name__ == '__main__':
     # validate_all_simulations('ST-PROP',50,50)
     # validate_all_simulations('ST-TOP',50,50)
     # validate_all_simulations('ST-RND',50,50)
-    # validate_all_simulations('ST-ALL',50,50)
+    validate_all_simulations('ST-ALL',50,50)
 
     # length = 50
     # validate_simulation('ALL',length)
