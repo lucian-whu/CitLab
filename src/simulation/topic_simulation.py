@@ -623,8 +623,8 @@ def topic_values():
 
             ref_c10s = [pid_topic_cits.get(pid,{}).get(topic,0) for pid in refs]
             # print ref_c10s
-            ris,res = zscore_outlier(ref_c10s,2.5)
-            refv = np.mean(res)
+            ris,res = zscore_outlier(ref_c10s,3)
+            refv = np.mean(ref_c10s)
 
             if refv>_max_refv:
                 _max_refv = refv
@@ -710,9 +710,9 @@ def topic_values():
 
             ref_c10s = [pid_topic_cits.get(pid,{}).get(topic,0) for pid in refs]
             # print ref_c10s
-            ris,res = zscore_outlier(ref_c10s,2.5)
+            ris,res = zscore_outlier(ref_c10s,3)
 
-            refv = np.mean(res)
+            refv = np.mean(ref_c10s)
 
             c10_list.append(c10)
             refvs.append(refv)

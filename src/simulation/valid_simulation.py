@@ -261,7 +261,7 @@ def validate_all_simulations(mode,length,tn):
 
         cit_num = ref_dict[ref]
 
-        if cit_num > 500:
+        if cit_num > 100:
             high_cited_articles.append(ref)
 
         citation_nums.append(cit_num)
@@ -473,7 +473,7 @@ def validate_all_simulations(mode,length,tn):
 
         year = pid_year[pid]
 
-        if year <50:
+        if year <length/2:
             cut_kgs.append(kg)
             cut_ccs.append(cc)
 
@@ -599,7 +599,7 @@ def validate_all_simulations(mode,length,tn):
     ## ----------------------
     ## 2. 随机选择20个高被引论文进行可视化
     ## ----------------------
-    selected_highs=np.random.choice(high_cited_articles,size=20,replace=True)
+    selected_highs=np.random.choice(high_cited_articles,size=20,replace=False)
 
     fig,axes = plt.subplots(4,5,figsize=(12.5,10))
     for hi,ref in enumerate(selected_highs):
@@ -624,7 +624,7 @@ def validate_all_simulations(mode,length,tn):
         ax.plot(xs,ys)
         ax.set_xlabel(u'年份',fontproperties='SimHei')
         ax.set_ylabel(u'引用次数',fontproperties='SimHei')
-        ax.set_title(tn)
+        ax.set_title('%d'%(tn))
 
     plt.tight_layout()
     plt.savefig(outpath+'/simulated_high_life_length_dis_over_year_{:}_{:}.png'.format(mode,length),dpi=800)
@@ -634,6 +634,13 @@ def validate_all_simulations(mode,length,tn):
 ### 根据生成的article，对仿真结果进行验证
 def validate_simulation(mode,length):
     ## 读数据
+    ## 存数据
+    outpath = 'fig/validation/'+mode+'/'
+    isExists=os.path.exists(outpath)
+    # 判断结果
+    if not isExists:
+        # 如果不存在则创建目录
+        os.makedirs(outpath)
 
     print 'MODE:',mode,',Length:',length
     tit = mode
@@ -709,7 +716,7 @@ def validate_simulation(mode,length):
 
         cit_num = ref_dict[ref]
 
-        if cit_num > 500:
+        if cit_num > 100:
             high_cited_articles.append(ref)
 
         citation_nums.append(cit_num)
@@ -750,7 +757,7 @@ def validate_simulation(mode,length):
     plt.yscale('log')
     plt.tight_layout()
 
-    plt.savefig('fig/validation/simulated_citation_distribtuiotn_{:}_{:}.png'.format(mode,length),dpi=400)
+    plt.savefig(outpath+'simulated_citation_distribtuiotn_{:}_{:}.png'.format(mode,length),dpi=400)
     print 'citation distribution saved to simulated_citation_distribtuiotn.png'
 
 
@@ -796,8 +803,8 @@ def validate_simulation(mode,length):
 
     # plt.tight_layout()
 
-    # plt.savefig('fig/validation/simulated_author_citation_dis_{:}_{:}.png'.format(mode,length),dpi=800)
-    # print 'fig saved to fig/validation/simulated_author_citation_dis_{:}_{:}.png'.format(mode,length)
+    # plt.savefig(outpath+'simulated_author_citation_dis_{:}_{:}.png'.format(mode,length),dpi=800)
+    # print 'fig saved tooutpath+ simulated_author_citation_dis_{:}_{:}.png'.format(mode,length)
 
 
     # ## ----------------
@@ -875,9 +882,9 @@ def validate_simulation(mode,length):
 
     plt.tight_layout()
 
-    plt.savefig('fig/validation/simulated_kg_dis_{:}_{:}.png'.format(mode,length),dpi=400)
+    plt.savefig(outpath+'simulated_kg_dis_{:}_{:}.png'.format(mode,length),dpi=400)
 
-    print 'kg dis saved to fig/validation/simulated_kg_dis.png'
+    print 'kg dis saved tooutpath+ simulated_kg_dis.png'
 
 
     ## -------------
@@ -895,8 +902,8 @@ def validate_simulation(mode,length):
     plt.xlabel(u'年份',fontproperties='SimHei')
     plt.ylabel(u'价值',fontproperties='SimHei')
     plt.tight_layout()
-    plt.savefig('fig/validation/simulated_year_average_kg_{:}_{:}.png'.format(mode,length),dpi=600)
-    print 'fig saved to fig/validation/simulated_year_average_kg_{:}_{:}.png'.format(mode,length)
+    plt.savefig(outpath+'simulated_year_average_kg_{:}_{:}.png'.format(mode,length),dpi=600)
+    print 'fig saved tooutpath+ simulated_year_average_kg_{:}_{:}.png'.format(mode,length)
 
 
     ## -------
@@ -921,7 +928,7 @@ def validate_simulation(mode,length):
 
         year = pid_year[pid]
 
-        if year <50:
+        if year <length/2:
             cut_kgs.append(kg)
             cut_ccs.append(cc)
 
@@ -943,8 +950,8 @@ def validate_simulation(mode,length):
     plt.ylabel(u'文章数量',fontproperties='SimHei')
 
     # plt.tight_layout()
-    # plt.savefig('fig/validation/simulated_g100_kg_year_dis_{:}_{:}.png'.format(mode,length),dpi=600)
-    # print 'fig saved to fig/validation/simulated_g100_kg_year_dis_{:}_{:}.png'.format(mode,length)
+    # plt.savefig(outpath+'simulated_g100_kg_year_dis_{:}_{:}.png'.format(mode,length),dpi=600)
+    # print 'fig saved tooutpath+ simulated_g100_kg_year_dis_{:}_{:}.png'.format(mode,length)
 
     # ## -----
     # ## 4.高被引论文的分布
@@ -973,9 +980,9 @@ def validate_simulation(mode,length):
     plt.legend(prop={'family':'SimHei','size':8})
     plt.tight_layout()
 
-    plt.savefig('fig/validation/simulated_high_cited_paper_year_dis_{:}_{:}.png'.format(mode,length),dpi=400)
+    plt.savefig(outpath+'simulated_high_cited_paper_year_dis_{:}_{:}.png'.format(mode,length),dpi=400)
 
-    print 'fig/validation/simulated_high_cited_paper_year_dis_{:}_{:}.png'.format(mode,length)
+    print outpath+'simulated_high_cited_paper_year_dis_{:}_{:}.png'.format(mode,length)
 
     ## -------
     ## 5.kg与引用次数的关系
@@ -1000,8 +1007,8 @@ def validate_simulation(mode,length):
     ax1.legend(prop={'family':'SimHei','size':8})
 
     plt.tight_layout()
-    plt.savefig('fig/validation/simulated_correlate_value_citations_{:}_{:}.png'.format(mode,length),dpi=600)
-    print 'fig saved to fig/validation/simulated_correlate_value_citations_{:}_{:}.png'.format(mode,length)
+    plt.savefig(outpath+'simulated_correlate_value_citations_{:}_{:}.png'.format(mode,length),dpi=600)
+    print 'fig saved tooutpath+ simulated_correlate_value_citations_{:}_{:}.png'.format(mode,length)
 
     # return
 
@@ -1041,8 +1048,8 @@ def validate_simulation(mode,length):
     plt.title(tit,fontproperties='SimHei')
 
     plt.tight_layout()
-    plt.savefig('fig/validation/simulated_life_length_dis_over_year_{:}_{:}.png'.format(mode,length),dpi=400)
-    print 'fig saved to fig/validation/simulated_life_length_dis_over_year.png'
+    plt.savefig(outpath+'simulated_life_length_dis_over_year_{:}_{:}.png'.format(mode,length),dpi=400)
+    print 'fig saved tooutpath+ simulated_life_length_dis_over_year.png'
 
     ## ----------------------
     ## 2. 随机选择20个高被引论文进行可视化
@@ -1075,23 +1082,23 @@ def validate_simulation(mode,length):
         ax.set_title(tn)
 
     plt.tight_layout()
-    plt.savefig('fig/validation/simulated_high_life_length_dis_over_year_{:}_{:}.png'.format(mode,length),dpi=800)
-    print 'fig saved to fig/validation/simulated_high_life_length_dis_over_year.png'
+    plt.savefig(outpath+'simulated_high_life_length_dis_over_year_{:}_{:}.png'.format(mode,length),dpi=800)
+    print 'fig saved tooutpath+ simulated_high_life_length_dis_over_year.png'
 
 
 
 if __name__ == '__main__':
     # simulated_data_viz()
-    length = 100
-    validate_all_simulations('MT-PROP',50,50)
-    validate_all_simulations('MT-TOP',50,50)
-    validate_all_simulations('MT-RND',50,50)
+    # validate_all_simulations('MT-PROP',50,50)
+    # validate_all_simulations('MT-TOP',50,50)
+    # validate_all_simulations('MT-RND',50,50)
     validate_all_simulations('MT-ALL',50,50)
-    validate_all_simulations('ST-PROP',50,50)
-    validate_all_simulations('ST-TOP',50,50)
-    validate_all_simulations('ST-RND',50,50)
-    validate_all_simulations('ST-ALL',50,50)
+    # validate_all_simulations('ST-PROP',50,50)
+    # validate_all_simulations('ST-TOP',50,50)
+    # validate_all_simulations('ST-RND',50,50)
+    # validate_all_simulations('ST-ALL',50,50)
 
+    # length = 50
     # validate_simulation('ALL',length)
     # validate_simulation('random',length)
 

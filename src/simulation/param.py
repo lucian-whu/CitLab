@@ -75,44 +75,38 @@ class PARAM:
         self.topic_relevance_matrix = self.simulate_topic_relevance()
 
         ## 各个主题的价值系数分布
-        topic_lambda_dis = json.loads(open('topic_lambda_dis.json').read())
-        topic_sigma_dis = json.loads(open('topic_sigma_dis.json').read())
+        ## 主题 lambda_0的lognorm系数
+        self.lambda_0_mode,self.lambda_0_sigma = [0.12,0.61]
+        self.lambda_0_scale = np.exp(np.log(self.lambda_0_mode)+self.lambda_0_sigma**2)
+        # ## sigma的分布系数
+        self.sigma_mode,self.sigma_siama = [0.86,0.17]
+        self.sigma_scale = np.exp(np.log(self.sigma_mode)+self.sigma_siama**2)
+
+        # topic_lambda_dis = json.loads(open('topic_lambda_dis.json').read())
+        # topic_sigma_dis = json.loads(open('topic_sigma_dis.json').read())
 
         ## 为每个主题生成一个主题分布
         self._topic_lambda_dis = {}
         for topic in self._topics:
 
             ## 随机一个lambda 随机一个sigma
-
-            _lambda = np.random.choice(topic_lambda_dis['x'],size=1,p=topic_lambda_dis['y'])[0]
-            _sigma = np.random.choice(topic_sigma_dis['x'],size=1,p=topic_sigma_dis['y'])[0]
-
-
+            _lambda,_sigma = self.sample_topic_lambda_sigma()
+            # _sigma = lognorm.rvs(s=sigma_siama,loc=0,scale=sigma_scale,size=1)[0]
 
             ## 根据两个值计算出lognorm的
             _scale = np.exp(np.log(_lambda)+_sigma**2)
 
             print topic,_lambda,_sigma,_scale
 
+            self._topic_lambda_dis[topic] =[_scale,_sigma]
 
-            ## 使用 lognorm 计算x以及y值
-            xs = list(np.arange(0.001,1,0.001))
-            xs.extend(list(np.arange(1,40,0.1)))
-            ys = lognorm.pdf(xs, _sigma, loc=0, scale=_scale)
-            ys = np.array(ys)/np.sum(ys)
 
-            self._topic_lambda_dis[topic]=[xs,ys]
 
-        ## 加载整体的lambda_dis
-        lambda_dis = json.loads(open('lambda_dis.json').read())
-        _lambda = 0.091
-        _sigma = 1.11
+        _lambda = 0.056
+        _sigma = 1.1
         _scale = np.exp(np.log(_lambda)+_sigma**2)
-        xs = list(np.arange(0.001,1,0.001))
-        xs.extend(list(np.arange(1,40,0.1)))
-        ys = lognorm.pdf(xs, _sigma, loc=0, scale=_scale)
-        ys = np.array(ys)/np.sum(ys)
-        self._topic_lambda_dis['ST'] =[xs,ys]
+        self._topic_lambda_dis['ST'] =[_scale,_sigma]
+
 
         ## 把所有topic的lambda分布画出来
         all_ts = self._topic_lambda_dis.keys()
@@ -120,7 +114,20 @@ class PARAM:
         fig,axes = plt.subplots(num_ts/2+1,2,figsize=(8,(num_ts/2+1)*4))
         for i,t in enumerate(sorted(all_ts)):
 
-            x,y = self._topic_lambda_dis[t]
+            ## 对每一个主题的lognorm进行10000次抽样，统计其频次分布
+
+            _scale,_sigma = self._topic_lambda_dis[t]
+
+            _samples = [float('{:.3f}'.format(l)) for l in lognorm.rvs(s=_sigma,loc=0,scale=_scale,size=10000) if l >0.0001 and l<40]
+
+            _s_counter = Counter(_samples)
+
+            x = []
+            y = []
+            for _s in sorted(_s_counter.keys()):
+                x.append(_s)
+                y.append(_s_counter[_s])
+
 
             ax = axes[i/2,i%2]
 
@@ -137,6 +144,19 @@ class PARAM:
         print 'lambda distribution used saved to fig/param/lambda_dis.png.'
 
 
+    def sample_topic_lambda_sigma(self):
+
+        while True:
+            _lambda = lognorm.rvs(s=self.lambda_0_sigma,loc=0,scale=self.lambda_0_scale,size=1)[0]
+
+            if _lambda>0.06 and _lambda< 0.18:
+                break
+        while True:
+            _sigma = lognorm.rvs(s=self.sigma_siama,loc=0,scale=self.sigma_scale,size=1)[0]
+            if _sigma>0.7 and _sigma<1.1:
+                break
+
+        return _lambda,_sigma
 
     ## 价值转移函数参数,根据相关性计算的转化比
     def trans(self,rel):
@@ -149,9 +169,13 @@ class PARAM:
     def knowledge_gain_coef(self,topics,model):
 
         if model=='ST':
-            lambda_list = self._topic_lambda_dis['ST'][0]
-            lambda_probs = self._topic_lambda_dis['ST'][1]
-            return np.random.choice(lambda_list,size=len(topics),p=lambda_probs,replace=True)
+            # lambda_list = self._topic_lambda_dis['ST'][0]
+            # lambda_probs = self._topic_lambda_dis['ST'][1]
+            # return np.random.choice(lambda_list,size=len(topics),p=lambda_probs,replace=True)
+            _scale,_sigma = self._topic_lambda_dis['ST']
+
+            return lognorm.rvs(s=_sigma,loc=0,scale=_scale,size=len(topics))
+
 
         elif model=='MT':
             ## 对主题以及位置进行计算
@@ -164,9 +188,11 @@ class PARAM:
             indexes = []
             for t in t_num.keys():
                 ins = t_num[t]
-                lambda_list = self._topic_lambda_dis[t][0]
-                lambda_probs = self._topic_lambda_dis[t][1]
-                t_ls = np.random.choice(lambda_list,size=len(ins),p=lambda_probs,replace=True)
+                # lambda_list = self._topic_lambda_dis[t][0]
+                # lambda_probs = self._topic_lambda_dis[t][1]
+                # t_ls = np.random.choice(lambda_list,size=len(ins),p=lambda_probs,replace=True)
+                _scale,_sigma = self._topic_lambda_dis[t]
+                t_ls = lognorm.rvs(s=_sigma,loc=0,scale=_scale,size=len(ins))
 
                 lambdas.extend(t_ls)
                 indexes.extend(ins)
@@ -213,8 +239,8 @@ class PARAM:
     def read_papers(self,_ALL_articles_ids,_article_kgs,_article_kg_probs,_read_indexes,PR,exclude_read):
 
         tn = len(_ALL_articles_ids)
-        ## 确定需要阅读的论文数量在150到450篇论文之间
-        rn = int(np.random.normal(300,50,1)[0])
+        ## 确定需要阅读的论文数量在350到650篇论文之间
+        rn = int(np.random.normal(500,50,1)[0])
         ## totoal num
         article_indexes = range(tn)
 
@@ -226,26 +252,26 @@ class PARAM:
             return article_indexes,_ALL_articles_ids,_article_kgs,_article_kg_probs
 
         else:
-            _article_kg_probs_copy =copy.copy(_article_kg_probs)
+            _article_kg_copy =copy.copy(_article_kgs)
             _same_probs = [1]*tn
             ## 是否在未读文献中进行
             if exclude_read:
                 for article_index in _read_indexes:
-                    _article_kg_probs_copy[article_index]=0
+                    _article_kg_copy[article_index]=0
                     _same_probs[article_index] = 0
 
-            _article_kg_probs_copy = _article_kg_probs_copy/np.sum(_article_kg_probs_copy)
+            _article_kg_copy = _article_kg_copy/np.sum(_article_kg_copy)
             _same_probs = np.array(_same_probs)/float(np.sum(_same_probs))
 
-            # print _article_kg_probs_copy
+            # print _article_kg_copy
             # print article_indexes
             # print rn
             if PR=='PROP':
                 ## 根据概率随机选择
-                selected_indexes = np.random.choice(article_indexes,size=rn,p=_article_kg_probs_copy,replace=False)
+                selected_indexes = np.random.choice(article_indexes,size=rn,p=_article_kg_copy,replace=False)
 
             elif PR =='TOP':
-                selected_indexes = sorted(article_indexes,key=lambda x:_article_kg_probs_copy[x],reverse=True)[:rn]
+                selected_indexes = sorted(article_indexes,key=lambda x:_article_kg_copy[x],reverse=True)[:rn]
 
             elif PR == 'RND':
                 ## 概率相同的
@@ -255,7 +281,7 @@ class PARAM:
             # _read_papers = [_ALL_articles_ids[p]]
             _read_papers = []
             _read_kgs = []
-            for i in _read_indexes:
+            for i in sorted(_read_indexes):
                 _read_papers.append(_ALL_articles_ids[i])
                 _read_kgs.append(_article_kgs[i])
 
@@ -390,15 +416,11 @@ class PARAM:
 
 
     ## 根据生产力分布，进行论文数量抽样
-    def sample_author_paper_num(self,num_of_past,num_of_new):
+    def sample_author_paper_num(self,num_of_authors):
 
-        new_prods =  np.random.choice(list(self.prod_new_xs),size=num_of_new,p=self.prod_new_probs,replace=True)
-        past_prods = np.random.choice(list(self.prod_xs),size=num_of_past,p=self.prod_probs,replace=True)
-
-        ##整体生产力分布
-        prods = []
-        prods.extend(past_prods)
-        prods.extend(new_prods)
+        # new_prods =  np.random.choice(list(self.prod_new_xs),size=num_of_new,p=self.prod_new_probs,replace=True)
+        # 后面还要添加随机项用于保证不为0
+        prods = np.random.choice(list(self.prod_xs),size=num_of_authors,p=self.prod_probs,replace=True)
 
         return prods
 
@@ -425,17 +447,19 @@ class PARAM:
     ### 每一个作者生产力的随机项
     ### prods[ia],author_year_articles,author,state
     def random_pn(self,prod,author_year_articles,author,state):
-
+        ## 作者过去的平均生产力
         mean = self.author_mean_pn(author_year_articles,author)
+
         ## 加上一个以mean为期望，以1位均差的正态随机项
         prod = prod+int(np.random.normal(mean,1,1)[0])
 
         if prod<0:
             prod=0
 
-        ## 如果是作者今年离开，那么作者至少发表一篇论文
-        if state==-1 and prod==0:
-            prod=1
+        ## 如果是作者今年离开以及今年的新人，那么作者至少发表一篇论文
+        if state==-1 or state == 0:
+            if prod==0:
+                prod=1
 
         return prod
 

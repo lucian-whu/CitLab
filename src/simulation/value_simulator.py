@@ -67,7 +67,7 @@ def record_paper_year():
 
     open('data/paper_year.json','w').write(json.dumps(pid_year))
 
-    print 'data saved to data/paper_year.jon'
+    print 'data saved to data/paper_year.json'
 
 
 
@@ -127,16 +127,13 @@ def gen_dataset():
         if ref_num<15:
             continue
 
-        has_0 = False
-        for ref in pid_refs[pid]:
-
-            if pid_cn.get(ref,0)==0:
-                has_0=True
-
-                break
-
-        if has_0:
-            continue
+        # has_0 = False
+        # for ref in pid_refs[pid]:
+        #     if pid_cn.get(ref,0)==0:
+        #         has_0=True
+        #         break
+        # if has_0:
+        #     continue
 
         saved_pid_refs[pid] = pid_refs[pid]
 
@@ -168,9 +165,9 @@ def ref_cit_relations():
     fig,axes = plt.subplots(3,4,figsize=(20,12))
     for i,pid in enumerate(np.random.choice(pid_refs.keys(),size=12)):
 
-        ref_vs = sorted([pid_cn[p] for p in pid_refs[pid]],reverse=True)
+        ref_vs = sorted([pid_cn.get(p,0) for p in pid_refs[pid]],reverse=True)
 
-        ris,rvs = zscore_outlier(ref_vs,2.5)
+        ris,rvs = zscore_outlier(ref_vs,3)
 
         print np.mean(ref_vs),np.mean(rvs)
 
@@ -204,11 +201,11 @@ def ref_cit_relations():
 
         t_num+=1
 
-        ref_vs = sorted([pid_cn[p] for p in refs],reverse=True)
+        ref_vs = sorted([pid_cn.get(p,0) for p in refs],reverse=True)
 
-        ris,rvs = zscore_outlier(ref_vs,2.5)
+        ris,rvs = zscore_outlier(ref_vs,3)
 
-        ref_v = np.mean(rvs)
+        ref_v = np.mean(ref_vs)
 
         all_refvs.append(ref_v)
 
@@ -225,28 +222,21 @@ def ref_cit_relations():
 
     _max_c10 = float(np.max(c10l))
     _max_refv = float(np.max(refvs))
-
-    print 'base lambda',_max_c10,_max_refv,_max_c10/_max_refv
     _base_lambda = _max_c10/_max_refv
+
+    print 'base lambda',_max_c10,_max_refv,_base_lambda
+
 
 
     ##
     for i,c10 in enumerate(c10l):
         refv = refvs[i]
-        v_coef_list.append(float('{:.3f}'.format((c10/_max_c10)/(refv/_max_refv))))
+        v_coef_list.append((c10/_max_c10)/(refv/_max_refv))
 
     ### refv的数量分布
     # refv_counter = Counter(all_refvs)
 
     plt.figure(figsize=(4,3.2))
-    # xs =[]
-    # ys = []
-    # for refv in sorted(refv_counter.keys()):
-    #     xs.append(refv)
-    #     ys.append(refv_counter[refv])
-
-
-    # plt.plot(xs,ys)
     n,bins,patchs = plt.hist(all_refvs,bins=100,rwidth=0.8)
 
     mean = np.mean(all_refvs)
@@ -254,7 +244,6 @@ def ref_cit_relations():
 
     plt.plot([mean]*10,np.linspace(0,np.max(n),10),'-.',label=u'均值={:.2f}'.format(mean))
     plt.plot([median]*10,np.linspace(0,np.max(n),10),'--',label=u'中位数={:.2f}'.format(median))
-
 
     plt.xlabel(u'参考价值',fontproperties='SimHei')
     plt.ylabel(u'文章数量',fontproperties='SimHei')
@@ -269,7 +258,7 @@ def ref_cit_relations():
     ## 相同的参考价值之上的真实价值分布
     plt.figure(figsize=(4,3.2))
     # styles = ['-']
-    for i,refv in enumerate([10,20,30,40,50]):
+    for i,refv in enumerate([10,20,40,50,80]):
 
         c10_list = ref_c10s[refv]
 
@@ -309,7 +298,7 @@ def ref_cit_relations():
     ##在同样基础之上的分布
     plt.figure(figsize=(4,3.2))
     # styles = ['-']
-    for i,refv in enumerate([10,20,30,40,50]):
+    for i,refv in enumerate([10,20,40,50,80]):
 
         c10_list = ref_c10s[refv]
 
@@ -359,7 +348,7 @@ def ref_cit_relations():
     ### 归一化之后的价值系数图
     plt.figure(figsize=(4,3.2))
     # styles = ['-']
-    for i,refv in enumerate([10,20,30,40,50]):
+    for i,refv in enumerate([10,20,40,50,80]):
 
         c10_list = ref_c10s[refv]
 
@@ -426,7 +415,7 @@ def ref_cit_relations():
     plt.plot(c10l,refvs,'o',alpha=0.7,label='皮尔逊相关系数:%.4f' % float(ps))
     xs = range(1,2000)
     ys = [linear_func(x,*popt) for x in xs ]
-    plt.plot(xs,ys,'--',linewidth=3,label=u'y=%.3fx+%.3f,$R^2=$%.3f'%(popt[0],popt[1],0.031))
+    plt.plot(xs,ys,'--',linewidth=3,label=u'y=%.3fx+%.3f,$R^2=$%.3f'%(popt[0],popt[1],0.02))
     plt.xlabel('$c_{10}$')
     plt.ylabel('$\langle v(refs) \\rangle$')
     plt.xscale('log')
@@ -440,7 +429,7 @@ def ref_cit_relations():
 
 
     ## 对价值系数进行估计
-    vc_dict = Counter(v_coef_list)
+    vc_dict = Counter([float('{:.3f}'.format(coef)) for coef in v_coef_list])
     xs = []
     ys = []
     for vc in sorted(vc_dict.keys()):
@@ -462,20 +451,6 @@ def ref_cit_relations():
     ys = np.array(ys)/float(np.sum(ys))
     scale,loc,sigma,mu,mode = fit_lognorm(v_coef_list)
 
-    ## 根据拟合的lognorm进行概率计算，存储到文件用于仿真
-    lambda_dis = {}
-    fitted_xs = np.arange(0.001,20,0.001)
-
-    pdf_fitted = scipy.stats.lognorm.pdf(xs, sigma, loc=0, scale=scale)
-    pdf_fitted_ys = np.array(pdf_fitted)/np.sum(pdf_fitted)
-    lambda_dis['x'] = list(np.array(xs)*_base_lambda)
-    lambda_dis['y'] = list(pdf_fitted_ys)
-    # print 'X:',fitted_xs[sorted(range(len(fitted_xs)),key=lambda x:pdf_fitted_ys[x],reverse=True)[0]]
-    print 'length of lambdas',len(xs),min(xs),max(xs)
-    open('lambda_dis.json','w').write(json.dumps(lambda_dis))
-    print 'data saved to lambda_dis.json'
-
-
     plt.figure(figsize=(4,3.2))
     plt.plot(np.array(xs)*_base_lambda,ys,'o',fillstyle='none')
 
@@ -483,7 +458,6 @@ def ref_cit_relations():
     pdf_fitted = scipy.stats.lognorm.pdf(np.array(xs), sigma, loc=0, scale=scale)
     pdf_fitted = np.array(pdf_fitted)/np.sum(pdf_fitted)
 
-    ## 将X平移值真正的lambda
     plt.plot(np.array(xs)*_base_lambda,pdf_fitted,'--',linewidth=2,label=u'拟合曲线$scale=%.2f,\sigma=%.2f$' %(scale*_base_lambda,sigma))
     x0=mode*_base_lambda
 
@@ -525,9 +499,9 @@ def year_lambdas():
         year_nums[year]+=1
         ## 参考价值
         refs = pid_refs[pid]
-        ref_vs = sorted([pid_cn[p] for p in refs],reverse=True)
-        ris,rvs = zscore_outlier(ref_vs,2.5)
-        refv = np.mean(rvs)
+        ref_vs = sorted([pid_cn.get(p,0) for p in refs],reverse=True)
+        ris,rvs = zscore_outlier(ref_vs,3)
+        refv = np.mean(ref_vs)
         ## 真实价值
         c10 = pid_cn[pid]
 
@@ -652,7 +626,7 @@ def year_lambdas():
     plt.figure(figsize=(3.5,3.2))
 
     plt.plot(range(len(x0s)),x0s,label=u'各年份$\lambda_{0}$')
-    plt.plot(range(len(x0s)),[0.091]*len(x0s),'--',c='r',label=u'整体$\lambda_{0}$')
+    plt.plot(range(len(x0s)),[0.056]*len(x0s),'--',c='r',label=u'整体$\lambda_{0}=0.056$')
 
     plt.xticks(range(len(x0s)),zone_labels,rotation=-90)
     plt.xlabel(u'年份区间',fontproperties='SimHei')
@@ -711,7 +685,7 @@ if __name__ == '__main__':
 
     ref_cit_relations()
 
-    # year_lambdas()
+    year_lambdas()
 
     # compare_citation_dis()
 

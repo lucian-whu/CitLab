@@ -162,6 +162,7 @@ def simulate_citations(year_news,year_ends,author_year_articles,paramObj):
                     ref_list,ref_kgs = paramObj.cit_based_on_prob(_read_papers,_read_kgs,_read_kg_probs)
 
                     _lambda_coef = lambdas[aindex]
+                    # ris,rsv = zscore_outlier(ref_kgs,3)
                     refv = np.mean(ref_kgs)
 
                     # kg = np.mean(ref_kgs)*lambdas[aindex]
@@ -229,12 +230,14 @@ def simulate_author_writting_papers(year_news,year_ends,paramObj):
     ## 初始作者
     totals = set([])
     attrs = []
-    ## 一位作者在某年发表的论文
+
+    ## 作者在各年份发表的论文
     author_year_articles = defaultdict(lambda:defaultdict(list))
 
     ##记录所有的论文数量
     _ALL_articles_ids = []
     _ALL_articles_topics = []
+
     print 'simulate wirting papers ...'
     ## 从第一年开始
     for i in sorted(year_news.keys()):
@@ -248,9 +251,8 @@ def simulate_author_writting_papers(year_news,year_ends,paramObj):
         news = year_news[i]
         num_new = len(news)
 
-        ## 作者生产力的抽样
-        prods = paramObj.sample_author_paper_num(total_num_authors,num_new)
-
+        ## 作者生产力的抽样，分剩余作者以及新作者两种，新作者第一年必须是大于等于1的
+        prods = paramObj.sample_author_paper_num(total_num_authors+num_new)
 
         ## 写完论文后离开一部分人
         ends = year_ends[i]
@@ -289,7 +291,6 @@ def simulate_author_writting_papers(year_news,year_ends,paramObj):
             num_of_papers =  paramObj.random_pn(prods[ia],author_year_articles,author,state)
             ## 确定论文的ID
             article_ids = paramObj.ids_of_articles(num_of_papers)
-
             ##------------
             ## 对于所有的论文进行主题选择
             ##------------
@@ -369,7 +370,7 @@ def simulate_authors(paramObj):
     ## 初始人数
     s0 = paramObj.author_number
     LENGTH = paramObj.length
-    ## 仿真120年
+
     print 'initail author num %d , simulation length %d ...' % (s0,LENGTH)
 
     print 'simulated authors and author research life ...'
@@ -379,7 +380,7 @@ def simulate_authors(paramObj):
         authors,rses  = paramObj.add_authors(i,s0,i==1)
         for j,a in enumerate(authors):
 
-            ## 这个人的研究周期
+            ## 这个人的研究周期， 从1开始，最长40年
             rs = rses[j]
 
             ## 开始年份为i
