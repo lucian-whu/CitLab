@@ -12,7 +12,7 @@ import matplotlib as mpl
 import matplotlib.colors as colors
 from cycler import cycler
 import pylab
-# import seaborn as sns
+import seaborn as sns
 import pandas as pd
 
 #### 显示中文的设置

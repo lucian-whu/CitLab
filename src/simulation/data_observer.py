@@ -209,8 +209,8 @@ def author_productivity():
 
     print popt
 
-    plt.plot(np.array(xs),ys,label=u'作者年生产力')
-    plt.plot(xs,[expfunc(x,*popt) for x in xs],'--',label=u'拟合曲线$p(n)=%.2f*e^{%.2fn}$'%(popt[0],popt[1]))
+    plt.plot(np.array(xs),ys,label=u'真实数据')
+    plt.plot(xs,[expfunc(x,*popt) for x in xs],'--',label=u'拟合曲线$prod(n)=%.2f*e^{%.2fn}$'%(popt[0],popt[1]))
 
     fit=powerlaw.Fit(np.array(paper_nums)+1,discrete=True,xmin=2)
 
@@ -237,9 +237,9 @@ def author_productivity():
 
     plt.tight_layout()
 
-    plt.savefig('fig/prod_dis.png',dpi=400)
+    plt.savefig('fig/prod_dis.pdf',dpi=800)
 
-    print 'fig saved to fig/prod_dis.png'
+    print 'fig saved to fig/prod_dis.pdf'
 
     ### 保存一个作者的生产力随机抽样
 
@@ -293,9 +293,9 @@ def author_productivity():
 
     plt.tight_layout()
 
-    plt.savefig('fig/tn_prod.png',dpi=400)
+    plt.savefig('fig/tn_prod.pdf',dpi=800)
 
-    print 'fig saved to fig/tn_prod.png'
+    print 'fig saved to fig/tn_prod.pdf'
 
     ### 排序
 
@@ -331,11 +331,11 @@ def author_productivity():
 
     plt.tight_layout()
 
-    plt.savefig('fig/tn_prod_sorted.png',dpi=400)
+    plt.savefig('fig/tn_prod_sorted.pdf',dpi=800)
 
-    print 'fig saved to fig/tn_prod_sorted.png'
+    print 'fig saved to fig/tn_prod_sorted.pdf'
 
-    return
+    # return
 
     ## 选择
 
@@ -385,8 +385,8 @@ def author_productivity():
     # plt.legend()
     # plt.tight_layout()
 
-    # plt.savefig('fig/pn_exponential.png',dpi=400)
-    # print 'fig saved to fig/pn_exponential.png'
+    # plt.savefig('fig/pn_exponential.pdf',dpi=800)
+    # print 'fig saved to fig/pn_exponential.pdf'
 
 
     # plt.figure(figsize=(5,4))
@@ -398,9 +398,9 @@ def author_productivity():
 
     # plt.tight_layout()
 
-    # plt.savefig('fig/para_dis.png',dpi=400)
+    # plt.savefig('fig/para_dis.pdf',dpi=800)
 
-    # print 'fig saved to fig/para_dis.png'
+    # print 'fig saved to fig/para_dis.pdf'
 
     # return
 
@@ -451,9 +451,9 @@ def author_productivity():
 
     plt.tight_layout()
 
-    plt.savefig('fig/age_prod.png',dpi=400)
+    plt.savefig('fig/age_prod.pdf',dpi=800)
 
-    print 'fig saved to fig/age_prod.png'
+    print 'fig saved to fig/age_prod.pdf'
 
     # return
 
@@ -474,16 +474,17 @@ def author_productivity():
 
     plt.figure(figsize=(5,4))
     plt.plot(xs,ys,label=u'平均生产力')
-    plt.plot(xs,ppas,'--',label=u'平均文章数')
+    # plt.plot(xs,ppas,'--',label=u'平均文章数')
+    plt.plot(xs,[np.mean(ys)]*len(xs),'--',label=u'平均值=%.2f'%np.mean(ys))
     plt.xlabel(u'年份',fontproperties='SimHei')
     plt.ylabel(u'生产力',fontproperties='SimHei')
-    plt.ylim(0,2)
+    plt.ylim(-1,2)
     plt.legend(prop={'family':'SimHei','size':8})
     plt.tight_layout()
 
-    plt.savefig('fig/productivity.png',dpi=400)
+    plt.savefig('fig/productivity.pdf',dpi=800)
 
-    print 'fig saved to fig/productivity.png'
+    print 'fig saved to fig/productivity.pdf'
 
     ## 随着年龄的增加，最大生产力
     xs = []
@@ -513,7 +514,7 @@ def author_productivity():
 
     # plt.tight_layout()
 
-    # plt.savefig('fig/age_num_dis.png',dpi=400)
+    # plt.savefig('fig/age_num_dis.pdf',dpi=800)
 
 
     # def multi(x,a,b,c):
@@ -540,9 +541,9 @@ def author_productivity():
 
     plt.tight_layout()
 
-    plt.savefig('fig/max_producitvity.png',dpi=400)
+    plt.savefig('fig/max_producitvity.pdf',dpi=800)
 
-    print 'fig saved to fig/max_producitvity.png'
+    print 'fig saved to fig/max_producitvity.pdf'
 
 
 def delta_num():
@@ -667,7 +668,7 @@ def delta_num():
     # ax1.plot([10]*10,np.linspace(0.0001,1,10),'--',linewidth=0.5)
 
     ax1.set_xlabel(u'研究周期(年)',fontproperties='SimHei')
-    ax1.set_ylabel(u'$p_{rs}(t)$')
+    ax1.set_ylabel(u'$p_{rs}(k)$')
     ax1.set_yscale('log')
     # ax1.set_xscale('log')
 
@@ -700,9 +701,9 @@ def delta_num():
 
     plt.tight_layout()
 
-    plt.savefig('fig/_avg_left_dis.png',dpi=400)
+    plt.savefig('fig/_avg_left_dis.pdf',dpi=800)
 
-    print 'year 2000 savd to fig/_avg_left_dis.png'
+    print 'year 2000 savd to fig/_avg_left_dis.pdf'
 
     ### 对密度概率分布进行拟合
     fig,ax = plt.subplots(figsize=(5,4))
@@ -723,7 +724,7 @@ def delta_num():
     # fit.plot_pdf(ax=ax)
     # fit.power_law.plot_pdf(linestyle='--',c='r',label=u'拟合曲线',ax=ax)
     ax.set_xlabel(u'研究周期',fontproperties='SimHei')
-    ax.set_ylabel(u'$p_{rs}(t)$')
+    ax.set_ylabel(u'$p_{rs}(k)$')
     # ax.set_xscale('log')
     ax.set_yscale('log')
 
@@ -739,7 +740,7 @@ def delta_num():
     fit_Y =  [pl_func(x,*popt) for x in xs]
 
     print popt
-    l2=ax.plot(xs[1:],fit_Y[1:],'--',label=u'拟合曲线 $p_{rs}(t) = %.2f*t^{-%.2f}$' % (popt[0],alpha))
+    l2=ax.plot(xs[:],fit_Y[:],'--',label=u'拟合曲线 $p_{rs}(k) = %.2f*k^{-%.2f}$' % (popt[0],alpha))
 
     # def poisson(k, lamb):
         # return (lamb**k/factorial(k)) * np.exp(-lamb)
@@ -755,9 +756,9 @@ def delta_num():
     # labels = [l.get_label() for l in lns]
     plt.legend(prop={'family':'SimHei','size':8})
     plt.tight_layout()
-    plt.savefig('fig/left_fit.png',dpi=400)
+    plt.savefig('fig/left_fit.pdf',dpi=800)
 
-    print 'left prop saved to fig/left_fit.png.'
+    print 'left prop saved to fig/left_fit.pdf.'
 
     ### 以拟合曲线进行离开概率的模拟
     ## 模拟四十年的周期, 这里存在后面的和大于1的问题，目前只模拟到10年
@@ -777,9 +778,9 @@ def delta_num():
     age_dis['x'] = fit_X
     age_dis['y'] = list(real_Y)
 
-    open('rs_dis.json','w').write(json.dumps(age_dis))
+    open('a_rs_dis.json','w').write(json.dumps(age_dis))
 
-    print 'powlaw saved to rs_dis.json'
+    print 'powlaw saved to a_rs_dis.json'
 
     acc_Y = np.array([np.sum(real_Y[:i+1]) for i in range(len(real_Y))])
 
@@ -794,21 +795,21 @@ def delta_num():
         lpct = cy
     print pcts
 
-    l2=ax1.plot(fit_X[:-1],ccdf_Y[:-1],label=u'互补累积分布 $P_c(t)$',c='r')
-    l1 = ax1.plot(fit_X[:-1],pcts[:-1],'--',label='$p_c(s_i|t)$')
+    l2=ax1.plot(fit_X[:-1],ccdf_Y[:-1],label=u'$P_c(k)$',c='r')
+    l1 = ax1.plot(fit_X[:-1],pcts[:-1],'--',label='$p_c(s_i|k)$')
 
-    ax1.set_ylabel(u'概率', fontproperties='SimHei')
+    ax1.set_ylabel(u'$p$', fontproperties='SimHei')
     # ax1.set_yscale('log')
-    ax1.set_xlabel(u'年份($t$)',fontproperties='SimHei')
+    ax1.set_xlabel(u'$k$',fontproperties='SimHei')
 
     print popt
     lns = l1+l2
     labels = [l.get_label() for l in lns]
     plt.legend(lns,labels,prop={'family':'SimHei','size':8})
     plt.tight_layout()
-    plt.savefig('fig/continue_fit.png',dpi=400)
+    plt.savefig('fig/continue_fit.pdf',dpi=800)
 
-    print 'left prop saved to fig/continue_fit.png.'
+    print 'left prop saved to fig/continue_fit.pdf.'
 
 
     plt.figure(figsize=(5,4))
@@ -818,21 +819,21 @@ def delta_num():
         ## moving average
         percents = np.convolve(percents, np.ones((10,))/10, mode='valid')
 
-        plt.plot(years[9:],percents,label='t={:}'.format(left))
+        plt.plot(years[9:],percents,label='k={:}'.format(left))
 
     plt.plot([1980]*10,np.linspace(0.001,1,10),'--',linewidth=0.5,c='r')
 
-    plt.xlabel(u'年份(y)',fontproperties='SimHei')
-    plt.ylabel('$p_{rs}(t|y)$')
+    plt.xlabel(u'$t$',fontproperties='SimHei')
+    plt.ylabel('$p_{rs}(k|t)$')
     plt.yscale('log')
 
     art = plt.legend(prop={'family':'SimHei','size':8},loc=9,bbox_to_anchor=(0.5, -0.15), ncol=5)
 
     plt.tight_layout()
 
-    plt.savefig('fig/left_percentage.png',dpi=400,additional_artists=[art],bbox_inches="tight")
+    plt.savefig('fig/left_percentage.pdf',dpi=800,additional_artists=[art],bbox_inches="tight")
 
-    print 'author left probability saved to left_percentage.png '
+    print 'author left probability saved to left_percentage.pdf '
 
 
     print 'author used %d, out interval %d' % (used_au_num,out_interval)
@@ -885,8 +886,8 @@ def delta_num():
     plt.yscale('log')
 
     plt.tight_layout()
-    plt.savefig('fig/interval.png',dpi=400)
-    print 'interval distribution saved to fig/interval.png'
+    plt.savefig('fig/interval.pdf',dpi=800)
+    print 'interval distribution saved to fig/interval.pdf'
     # plt.legend(prop={'family':'SimHei','size':15})
     # return
 
@@ -936,7 +937,7 @@ def delta_num():
 
     # plt.legend()
     plt.tight_layout()
-    plt.savefig('fig/author_num.png',dpi=400)
+    plt.savefig('fig/author_num.pdf',dpi=800)
 
     ### 作者数量拟合 news
     plt.figure(figsize=(5,4))
@@ -965,9 +966,9 @@ def delta_num():
     plt.yscale('log')
     plt.tight_layout()
 
-    plt.savefig('fig/author_num_fit.png',dpi=400)
+    plt.savefig('fig/author_num_fit.pdf',dpi=800)
 
-    print 'fiting author num figure saved to fig/author_num_fit.png'
+    print 'fiting author num figure saved to fig/author_num_fit.pdf'
 
 
 
@@ -1050,7 +1051,7 @@ def delta_num():
 
 
     plt.tight_layout()
-    plt.savefig('fig/lifespan_num.png',dpi=400)
+    plt.savefig('fig/lifespan_num.pdf',dpi=800)
 
     print 'done'
 
@@ -1068,7 +1069,7 @@ def ID_plot():
 
     plt.tight_layout()
 
-    plt.savefig('fig/ID_dis.png',dpi=400)
+    plt.savefig('fig/ID_dis.pdf',dpi=800)
 
 
 
@@ -1077,9 +1078,9 @@ def ID_plot():
 if __name__ == '__main__':
 
     # ## 生成数据
-    extract_from_metadata()
+    # extract_from_metadata()
     # ## 画图
-    # delta_num()
+    delta_num()
 
     # author_productivity()
     # compare_plots()

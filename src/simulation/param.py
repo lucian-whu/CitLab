@@ -103,7 +103,7 @@ class PARAM:
 
 
         _lambda = 0.056
-        _sigma = 1.1
+        _sigma = 1.05
         _scale = np.exp(np.log(_lambda)+_sigma**2)
         self._topic_lambda_dis['ST'] =[_scale,_sigma]
 
@@ -149,7 +149,7 @@ class PARAM:
         while True:
             _lambda = lognorm.rvs(s=self.lambda_0_sigma,loc=0,scale=self.lambda_0_scale,size=1)[0]
 
-            if _lambda>0.06 and _lambda< 0.18:
+            if _lambda>0.05 and _lambda< 0.10:
                 break
         while True:
             _sigma = lognorm.rvs(s=self.sigma_siama,loc=0,scale=self.sigma_scale,size=1)[0]

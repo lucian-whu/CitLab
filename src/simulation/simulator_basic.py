@@ -94,7 +94,7 @@ def random_pn(prod,adict,a,state):
     mean = author_mean_pn(adict,a)
 
     ## 加上一个以mean为期望，以1位均差的正态随机项
-    prod = prod+int(np.random.normal(mean,1,1)[0])
+    prod = prod+int(np.random.normal(mean,0.5,1)[0])
 
     if prod<0:
         prod=0
@@ -318,8 +318,8 @@ def simulate_author_papers(year_news,year_ends,length):
     plt.legend(prop={'family':'SimHei','size':8})
     plt.tight_layout()
 
-    plt.savefig('fig/simulated_author_num_{:}.png'.format(length),dpi=400)
-    print 'author num simulation saved to fig/simulated_author_num_{:}.png'.format(length)
+    plt.savefig('fig/simulated_author_num_{:}.pdf'.format(length),dpi=800)
+    print 'author num simulation saved to fig/simulated_author_num_{:}.pdf'.format(length)
 
     return author_year_articles
 
@@ -489,17 +489,17 @@ def simulate(length=100):
     ## 仿真作者的文章数量也需要一致
     author_year_articles = simulate_author_papers(year_news,year_ends,length)
 
-    simulate_citation(year_news,year_ends,author_year_articles,'random',length)
+    # simulate_citation(year_news,year_ends,author_year_articles,'random',length)
 
-    simulate_citation(year_news,year_ends,author_year_articles,'top',length)
+    # simulate_citation(year_news,year_ends,author_year_articles,'top',length)
 
-    simulate_citation(year_news,year_ends,author_year_articles,'prop',length)
+    # simulate_citation(year_news,year_ends,author_year_articles,'prop',length)
 
-    simulate_citation(year_news,year_ends,author_year_articles,'ALL',length)
+    # simulate_citation(year_news,year_ends,author_year_articles,'ALL',length)
 
 
 if __name__ == '__main__':
-    length = 50
+    length = 100
     simulate(length=length)
 
 

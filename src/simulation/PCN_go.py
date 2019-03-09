@@ -16,7 +16,7 @@ import copy
 ## 所有仿真
 def simulate_CN(arg):
 
-    modes = ['ST-ALL','MT-ALL','ST-PROP','ST-TOP','ST-RND','MT-PROP','MT-TOP','MT-RND']
+    modes = ['ST-ALL','MT-ALL','ST-PROP','MT-PROP','ST-RND','MT-RND','ST-TOP','MT-TOP']
 
     ## 参数对象
     paramObj = PARAM(arg)
@@ -334,7 +334,7 @@ def simulate_author_writting_papers(year_news,year_ends,paramObj):
 
 
     ## 主题论文数量分布
-    plt.figure(figsize=(14,2.8))
+    plt.figure(figsize=(12,3))
     # years,totals,news,ends = zip(*attrs)
 
     topic_counter = Counter(_ALL_articles_topics)
@@ -350,7 +350,7 @@ def simulate_author_writting_papers(year_news,year_ends,paramObj):
     plt.xticks(xs,labels,rotation=-90)
     plt.xlabel(u'主题',fontproperties='SimHei')
     plt.ylabel(u'文章数量',fontproperties='SimHei')
-    plt.ylim(1,ys[0]+10000)
+    plt.ylim(1,ys[0]+100000)
     plt.yscale('log')
     plt.legend(prop={'family':'SimHei','size':8})
     plt.tight_layout()

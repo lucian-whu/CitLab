@@ -77,8 +77,8 @@ def compare_plots():
     plt.legend(prop={'family':'SimHei','size':8})
 
     plt.tight_layout()
-    plt.savefig('fig/compare_pn.png',dpi=400)
-    print 'simulation of total papers saved to fig/compare_pn.png'
+    plt.savefig('fig/compare_pn.pdf',dpi=400)
+    print 'simulation of total papers saved to fig/compare_pn.pdf'
 
     ## 画出作者的文章总数量分布
     tn_dict = Counter(tnas)
@@ -98,8 +98,8 @@ def compare_plots():
     plt.yscale('log')
     plt.title('APS')
     plt.tight_layout()
-    plt.savefig('fig/compare_tn.png',dpi=400)
-    print 'data saved to fig/compare_tn.png'
+    plt.savefig('fig/compare_tn.pdf',dpi=400)
+    print 'data saved to fig/compare_tn.pdf'
 
 
 ## 作者的被引次数分布
@@ -115,6 +115,8 @@ def compare_citation_dis():
     fit = powerlaw.Fit(values)
 
     print fit.power_law.xmin
+
+    print fit.power_law.alpha
 
     print 'compare:',fit.distribution_compare('power_law', 'exponential')
 
@@ -146,7 +148,7 @@ def compare_citation_dis():
     plt.plot(xs,ys)
 
     plt.xlabel('$\#(c_i)$')
-    plt.ylabel('$p(c_i)$')
+    plt.ylabel('$p(\#(c_i))$')
     plt.title('APS')
     plt.xscale('log')
 
@@ -154,9 +156,9 @@ def compare_citation_dis():
 
     plt.tight_layout()
 
-    plt.savefig('fig/validation/compare_citation_dis.png',dpi=800)
+    plt.savefig('fig/validation/compare_citation_dis.pdf',dpi=800)
 
-    print 'fig saved to fig/validation/compare_citation_dis.png.'
+    print 'fig saved to fig/validation/compare_citation_dis.pdf.'
 
 ## 学术文献的平均价值的变化
 def average_value_over_year():
@@ -178,11 +180,11 @@ def average_value_over_year():
         if year==-1:
             continue
 
-        if int(year)<1960:
-            continue
+        # if int(year)<1960:
+        #     continue
 
-        if int(year)>2006:
-            continue
+        # if int(year)>2006:
+        #     continue
 
         progress+=1
 
@@ -218,28 +220,31 @@ def average_value_over_year():
 
         hr_ys.append(hr)
 
-    fig,ax = plt.subplots(figsize=(5,4))
-    # ax.plot(xs,ys,label=u'文章数量',linewidth=1)
+    fig,ax = plt.subplots(1,1,figsize=(5,4))
+
+    ax.plot(xs,ys,label=u'文章数量',linewidth=1)
     print xs
+    print ys
     print high_ys
-    ax.plot(xs,high_ys,label=u'高被引论文',linewidth=1)
-    ax.set_xlabel(u'年代',fontproperties='SimHei')
+    ax.plot(xs,high_ys,label=u'高被引论文',linewidth=1,c='g')
+    ax.set_xlabel(u'发表年份',fontproperties='SimHei')
     ax.set_ylabel(u'文章数量',fontproperties='SimHei')
-    ax.set_ylim(1,1000)
+    ax.set_ylim(1,np.max(ys)+1000)
     ax.set_yscale('log')
     ax.legend(prop={'family':'SimHei','size':8})
     ax.set_title('APS')
+    # plt.title(u'APS')
 
-    # ax2 = ax.twinx()
-    # ax2.plot(xs,hr_ys,'--',label=u'高被引比例',c='r')
-    # ax2.set_ylabel(u'高被引文文章比例',fontproperties='SimHei')
-    # ax2.tick_params(axis='y', labelcolor='r')
-    # ax2.legend(prop={'family':'SimHei','size':8})
+    ax2 = ax.twinx()
+    ax2.plot(xs,hr_ys,'--',label=u'高被引比例',c='r')
+    ax2.set_ylabel(u'高被引文文章比例',fontproperties='SimHei')
+    ax2.tick_params(axis='y', labelcolor='r')
+    ax2.legend(prop={'family':'SimHei','size':8})
 
     plt.tight_layout()
-    plt.savefig('fig/validation/compare_year_pn.jpg',dpi=800)
+    plt.savefig('fig/validation/compare_year_pn.pdf',dpi=800)
 
-    print 'fig/validation/compare_year_pn.jpg'
+    print 'fig/validation/compare_year_pn.pdf'
 
 
     plt.figure(figsize=(5,4))
@@ -253,8 +258,8 @@ def average_value_over_year():
 
     plt.tight_layout()
 
-    plt.savefig('fig/validation/compare_average_c10.png',dpi=800)
-    print 'fig saved to fig/validation/compare_average_c10.png'
+    plt.savefig('fig/validation/compare_average_c10.pdf',dpi=800)
+    print 'fig saved to fig/validation/compare_average_c10.pdf'
 
 ## 生命周期分布
 def compare_lifespan():
@@ -279,38 +284,125 @@ def compare_lifespan():
 
             ref_year_num[ref][year]+=1
 
-    year_lifespans = defaultdict(list)
+    year_lls = defaultdict(list)
+    year_lls_norm = defaultdict(list)
+
+    year_hfs = defaultdict(list)
+    year_hfs_norm = defaultdict(list)
     for pid in ref_year_num.keys():
         year_num = ref_year_num[pid]
         years = year_num.keys()
 
-        lifespan = np.max(years)-np.min(years)
-        year_lifespans[int(pid_year[pid])].append(lifespan)
+        year = int(pid_year[pid])
+
+        lifespan = np.max(years)-np.min(years)+1
+
+        year_lls[year].append(lifespan)
+
+        year_lls_norm[year].append(lifespan/float(2016-year+1))
+
+        total = float(np.sum(year_num.values()))
+        num = 0
+        hf=0
+        for y in sorted(year_num.keys(),key=lambda x:int(x)):
+            num+=year_num[y]
+
+            if num/total>0.5:
+                hf=y-year+1
+                break
+        year_hfs[year].append(hf)
+        year_hfs_norm[year].append(hf/((2016-year)+1))
 
     ## 随着时间生命周期长度的变化
     xs = []
     ys = []
-    for year in sorted(year_lifespans.keys()):
-        if int(year)<1960:
+    norm_ys = []
+    for year in year_lls.keys():
+
+        if year < 1960:
             continue
+
         xs.append(year)
-        ys.append(np.mean(year_lifespans[year]))
+        ys.append(np.mean(year_lls[year]))
+        norm_ys.append(np.mean(year_lls_norm[year]))
 
-    print xs
-    print ys
 
-    plt.figure(figsize=(5,4))
+    fig,ax = plt.subplots(figsize=(5,4))
 
-    plt.plot(xs,ys)
-    plt.title(u'APS',fontproperties='SimHei')
+    ax.plot(xs,ys)
 
-    plt.xlabel(u'年份',fontproperties='SimHei')
-    plt.ylabel(u'平均生命周期',fontproperties='SimHei')
+    ax.set_xlabel(u'年份',fontproperties='SimHei')
+    ax.set_ylabel(u'$ML$',fontproperties='SimHei')
+    ax.set_title('APS',fontproperties='SimHei')
+
+    ax2 = ax.twinx()
+    ax2.plot(xs,norm_ys,'--',c='r')
+    ax2.set_xlabel(u'年份',fontproperties='SimHei')
+    ax2.set_ylabel(u'$ML_{norm}$',fontproperties='SimHei')
+    ax2.tick_params(axis='y', labelcolor='r')
+    ax2.set_title('APS',fontproperties='SimHei')
 
     plt.tight_layout()
+    plt.savefig('fig/validation/compare_ll.pdf',dpi=800)
+    print 'fig saved to fig/validation/compare_ll.pdf'
 
-    plt.savefig('fig/validation/compare_lifespan.png',dpi=800)
-    print 'fig saved to fig/validation/compare_lifespan.png'
+    xs = []
+    ys = []
+    norm_ys = []
+    for year in year_hfs.keys():
+        if year < 1960:
+            continue
+
+        xs.append(year)
+        ys.append(np.mean(year_hfs[year]))
+        norm_ys.append(np.mean(year_hfs_norm[year]))
+
+
+    fig,ax = plt.subplots(figsize=(5,4))
+
+    ax.plot(xs,ys)
+
+    ax.set_xlabel(u'年份',fontproperties='SimHei')
+    ax.set_ylabel(u'$HL$',fontproperties='SimHei')
+    ax.set_title('APS',fontproperties='SimHei')
+
+    ax2 = ax.twinx()
+    ax2.plot(xs,norm_ys,'--',c='r')
+    ax2.set_xlabel(u'年份',fontproperties='SimHei')
+    ax2.set_ylabel(u'$HL_{norm}$',fontproperties='SimHei')
+    ax2.tick_params(axis='y', labelcolor='r')
+    ax2.set_title('APS',fontproperties='SimHei')
+
+    plt.tight_layout()
+    plt.savefig('fig/validation/compare_hf.pdf',dpi=800)
+    print 'fig saved to fig/validation/compare_hf.pdf'
+
+
+
+
+    # xs = []
+    # ys = []
+    # for year in sorted(year_lls.keys()):
+    #     if int(year)<1960:
+    #         continue
+    #     xs.append(year)
+    #     ys.append(np.mean(year_lls[year]))
+
+    # print xs
+    # print ys
+
+    # plt.figure(figsize=(5,4))
+
+    # plt.plot(xs,ys)
+    # plt.title(u'APS',fontproperties='SimHei')
+
+    # plt.xlabel(u'年份',fontproperties='SimHei')
+    # plt.ylabel(u'平均生命周期',fontproperties='SimHei')
+
+    # plt.tight_layout()
+
+    # plt.savefig('fig/validation/compare_lifespan.png',dpi=800)
+    # print 'fig saved to fig/validation/compare_lifespan.png'
 
     ## 随机抽取20片论文
     fig,axes = plt.subplots(4,5,figsize=(12.5,10))
@@ -333,13 +425,13 @@ def compare_lifespan():
         ax.set_title("{:}({:})".format(pid_year[pid],tn))
 
     plt.tight_layout()
-    plt.savefig('fig/validation/compare_20_life.png',dpi=800)
-    print 'fig saved to fig/validation/compare_20_life.png'
+    plt.savefig('fig/validation/compare_20_life.pdf',dpi=800)
+    print 'fig saved to fig/validation/compare_20_life.pdf'
 
 
 if __name__ == '__main__':
     # compare_citation_dis()
     # average_value_over_year()
     compare_lifespan()
-
+    # compare_plots()
 

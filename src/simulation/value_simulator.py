@@ -252,8 +252,8 @@ def ref_cit_relations():
     plt.legend(prop={'family':'SimHei','size':8})
     plt.tight_layout()
 
-    plt.savefig('fig/refv_dis.jpg',dpi=600)
-    print 'refv distribution saved to fig/refv_dis.jpg.'
+    plt.savefig('fig/refv_dis.pdf',dpi=600)
+    print 'refv distribution saved to fig/refv_dis.pdf.'
 
     ## 相同的参考价值之上的真实价值分布
     plt.figure(figsize=(4,3.2))
@@ -284,15 +284,15 @@ def ref_cit_relations():
     plt.yscale('log')
 
     plt.xlabel(u'$c_{10}$',fontproperties='SimHei')
-    plt.ylabel(u'比例',fontproperties='SimHei')
+    plt.ylabel(u'$p(c_{10})$',fontproperties='SimHei')
     plt.xscale('log')
 
     plt.legend(prop={'family':'SimHei','size':8})
     plt.tight_layout()
 
-    plt.savefig('fig/refv_c10_dis.png',dpi=800)
+    plt.savefig('fig/refv_c10_dis.pdf',dpi=800)
 
-    print 'fig saved to fig/refv_c10_dis.png'
+    print 'fig saved to fig/refv_c10_dis.pdf'
 
     # return
     ##在同样基础之上的分布
@@ -324,8 +324,8 @@ def ref_cit_relations():
 
     plt.yscale('log')
 
-    plt.xlabel(u'价值系数$\hat{\lambda}$',fontproperties='SimHei')
-    plt.ylabel(u'比例',fontproperties='SimHei')
+    plt.xlabel(u'$\lambda$',fontproperties='SimHei')
+    plt.ylabel(u'$p(\lambda)$',fontproperties='SimHei')
     plt.xscale('log')
 
     plt.xlim(-1,7)
@@ -341,9 +341,9 @@ def ref_cit_relations():
 
     plt.tight_layout()
 
-    plt.savefig('fig/lambda_dis.png',dpi=800)
+    plt.savefig('fig/lambda_dis.pdf',dpi=800)
 
-    print 'fig saved to fig/lambda_dis.png'
+    print 'fig saved to fig/lambda_dis.pdf'
 
     ### 归一化之后的价值系数图
     plt.figure(figsize=(4,3.2))
@@ -374,8 +374,8 @@ def ref_cit_relations():
 
     plt.yscale('log')
 
-    plt.xlabel(u'价值系数$\hat{\lambda}$',fontproperties='SimHei')
-    plt.ylabel(u'比例',fontproperties='SimHei')
+    plt.xlabel(u'$\lambda$',fontproperties='SimHei')
+    plt.ylabel(u'p(\lambda)',fontproperties='SimHei')
     plt.xscale('log')
 
     plt.xlim(-1,7)
@@ -391,9 +391,9 @@ def ref_cit_relations():
 
     plt.tight_layout()
 
-    plt.savefig('fig/lambda_dis_normed.png',dpi=800)
+    plt.savefig('fig/lambda_dis_normed.pdf',dpi=800)
 
-    print 'fig saved to fig/lambda_dis_normed.png'
+    print 'fig saved to fig/lambda_dis_normed.pdf'
 
     # return
 
@@ -423,9 +423,9 @@ def ref_cit_relations():
     plt.legend(prop={'family':'SimHei','size':8})
     plt.tight_layout()
 
-    plt.savefig('fig/c10_ref_relations.png',dpi=800)
+    plt.savefig('fig/c10_ref_relations.pdf',dpi=800)
 
-    print 'relation fig saved to fig/c10_ref_relations.png'
+    print 'relation fig saved to fig/c10_ref_relations.pdf'
 
 
     ## 对价值系数进行估计
@@ -467,14 +467,14 @@ def ref_cit_relations():
     plt.xscale('log')
 
     plt.xlabel('$\lambda$')
-    plt.ylabel('$P(\lambda)$')
+    plt.ylabel('$p(\lambda)$')
     plt.legend(prop={'family':'SimHei','size':8})
 
     plt.tight_layout()
 
-    plt.savefig('fig/lambda_fit.png',dpi=800)
+    plt.savefig('fig/lambda_fit.pdf',dpi=800)
 
-    print 'lambda fit figure saved to lambda_fit.png'
+    print 'lambda fit figure saved to lambda_fit.pdf'
 
 
 ### 不同年份的论文 系数的变化
@@ -564,8 +564,8 @@ def year_lambdas():
 
     plt.tight_layout()
 
-    plt.savefig('fig/lambda_year_num.jpg',dpi=800)
-    print 'fig saved to fig/lambda_year_num.jpg'
+    plt.savefig('fig/lambda_year_num.pdf',dpi=800)
+    print 'fig saved to fig/lambda_year_num.pdf'
     # return
     ##对于不同的年份画出lambda的分布以及拟合
     zone_lambdas = defaultdict(list)
@@ -619,9 +619,9 @@ def year_lambdas():
 
     plt.tight_layout()
 
-    plt.savefig('fig/lambda_zone_dis.jpg',dpi=800)
+    plt.savefig('fig/lambda_zone_dis.pdf',dpi=800)
 
-    print 'zone lambda dis saved to fig/lambda_zone_dis.jpg'
+    print 'zone lambda dis saved to fig/lambda_zone_dis.pdf'
 
     plt.figure(figsize=(3.5,3.2))
 
@@ -635,8 +635,8 @@ def year_lambdas():
 
     plt.tight_layout()
 
-    plt.savefig('fig/lambda_zone_x0_dis.jpg',dpi=800)
-    print 'lambda zone dis saved to fig/lambda_zone_x0_dis.jpg'
+    plt.savefig('fig/lambda_zone_x0_dis.pdf',dpi=800)
+    print 'lambda zone dis saved to fig/lambda_zone_x0_dis.pdf'
 
 
 
@@ -685,7 +685,7 @@ if __name__ == '__main__':
 
     ref_cit_relations()
 
-    year_lambdas()
+    # year_lambdas()
 
     # compare_citation_dis()
 

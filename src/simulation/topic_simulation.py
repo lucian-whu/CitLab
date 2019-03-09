@@ -149,8 +149,8 @@ def topic_nums():
     plt.yscale('log')
     plt.tight_layout()
 
-    plt.savefig('fig/topic/topic_num_dis.png',dpi=800)
-    print 'num of topic distribution saved fig/topic/topic_num_dis.png'
+    plt.savefig('fig/topic/topic_num_dis.pdf',dpi=800)
+    print 'num of topic distribution saved fig/topic/topic_num_dis.pdf'
 
     open('data/topic_year_dois.json','w').write(json.dumps(pcas_year_papers))
     print 'data saved to data/topic_year_dois.json'
@@ -187,8 +187,8 @@ def topic_nums():
     plt.xlabel(u'主题',fontproperties='SimHei')
     plt.ylabel(u'数量',fontproperties='SimHei')
     plt.tight_layout()
-    plt.savefig('fig/topic/topic_nums.jpg',dpi=800)
-    print 'topic nums saved to fig/topic/topic_nums.jpg'
+    plt.savefig('fig/topic/topic_nums.pdf',dpi=800)
+    print 'topic nums saved to fig/topic/topic_nums.pdf'
 
     ### 拟合曲线
     plt.figure(figsize=(3.5,2.8))
@@ -218,32 +218,32 @@ def topic_nums():
     print 'topic dis saved to topic_dis.json.'
 
 
-    plt.savefig('fig/topic/topic_nums_fit.png',dpi=800)
-    print 'fig saved to fig/topic/topic_nums_fit.png'
+    plt.savefig('fig/topic/topic_nums_fit.pdf',dpi=800)
+    print 'fig saved to fig/topic/topic_nums_fit.pdf'
 
-    ### 把前10的主题论文数量画出来
-    plt.figure(figsize=(5,4))
-    for pcas in xs[:10]:
+    # ### 把前10的主题论文数量画出来
+    # plt.figure(figsize=(5,4))
+    # for pcas in xs[:10]:
 
-        year_papers = pcas_year_papers[pcas]
+    #     year_papers = pcas_year_papers[pcas]
 
-        xs = []
-        ys = []
-        for year in sorted(year_papers.keys()):
-            xs.append(year)
-            ys.append(len(year_papers[year]))
+    #     xs = []
+    #     ys = []
+    #     for year in sorted(year_papers.keys()):
+    #         xs.append(year)
+    #         ys.append(len(year_papers[year]))
 
-        plt.plot(xs,ys,label='{:}'.format(pcas))
+    #     plt.plot(xs,ys,label='{:}'.format(pcas))
 
-    plt.xlabel(u'年',fontproperties='SimHei')
-    plt.ylabel(u'数量',fontproperties='SimHei')
+    # plt.xlabel(u'年',fontproperties='SimHei')
+    # plt.ylabel(u'数量',fontproperties='SimHei')
 
-    plt.legend()
+    # plt.legend()
 
-    plt.tight_layout()
+    # plt.tight_layout()
 
-    plt.savefig("fig/topic/topic_year_num.jpg",dpi=400)
-    print 'pcas year num saved to fig/topic_year_num.jpg'
+    # plt.savefig("fig/topic/topic_year_num.jpg",dpi=400)
+    # print 'pcas year num saved to fig/topic_year_num.jpg'
 
 ## 主题相关性
 def topic_relevance():
@@ -320,7 +320,7 @@ def topic_relevance():
     print 'topic relevance saved to data/topic_relevance.csv'
 
     ## 画热力图
-    plot_heatmap('data/topic_relevance.csv','主题相关性矩阵','主题','主题','fig/topic/topic_rel_matrix.png')
+    plot_heatmap('data/topic_relevance.csv','主题相关性矩阵','主题','主题','fig/topic/topic_rel_matrix.pdf')
 
     ## 画出前15的排序相关性
     plt.figure(figsize=(5,4))
@@ -361,7 +361,7 @@ def topic_relevance():
     plaw = lambda t,a,b: a*t**b
     # expfunc = lambda t,a,b:a*np.exp(b*t)
     popt,pcov = scipy.optimize.curve_fit(plaw,xs,ys,p0=(0.2,-1))
-    plt.plot(np.linspace(1,np.max(xs),10),[plaw(x+1,*popt) for x in np.linspace(1,np.max(xs),10)],'-^',label=u'拟合曲线',c='b')
+    plt.plot(np.linspace(1,np.max(xs),10),[plaw(x+1,*popt) for x in np.linspace(1,np.max(xs),10)],'-^',label=u'$f(i)=%.2f \\times i^{%.2f} $'%(popt[0],popt[1]),c='b')
 
     fit_xs = range(1,201)
     fit_ys = [plaw(x+1,*popt) for x in fit_xs]
@@ -382,8 +382,8 @@ def topic_relevance():
     plt.legend(prop={'family':'SimHei','size':8})
 
     plt.tight_layout()
-    plt.savefig('fig/topic/topic_rel_dis.png',dpi=800)
-    print 'fig saved to fig/topic/topic_rel_dis.png'
+    plt.savefig('fig/topic/topic_rel_dis.pdf',dpi=800)
+    print 'fig saved to fig/topic/topic_rel_dis.pdf'
 
 
 def gen_pid_topic_cits():
@@ -525,11 +525,11 @@ def trans_rate():
 
 
     plt.plot(xs,ys,label=u'平均转化率',alpha=0.6)
-    plt.plot(xs,avgs,'--',c='g',label=u'移动平均转化率',alpha=0.9)
+    plt.plot(xs,avgs,'--',c='g',label=u'移动平均转化率',alpha=0.9,linewidth=2)
 
     expfunc = lambda t,a,b:a*t**b
     popt,pcov = scipy.optimize.curve_fit(expfunc,xs,avgs)
-    plt.plot(xs,[expfunc(x,*popt) for x in xs],'--',label=u'拟合曲线$Tr(z)=%.2f\\times z^{%.2f}$'%(popt[0],popt[1]),c='r')
+    plt.plot(xs,[expfunc(x,*popt) for x in xs],'--',label=u'拟合曲线$Tr(z)=%.2f\\times z^{%.2f}$'%(popt[0],popt[1]),c='r',linewidth=2)
 
     print 'trans param',popt
 
@@ -541,9 +541,9 @@ def trans_rate():
     plt.legend(prop={'family':'SimHei','size':8})
     plt.tight_layout()
 
-    plt.savefig('fig/topic/topic_tr_relation.png',dpi=800)
+    plt.savefig('fig/topic/topic_tr_relation.pdf',dpi=800)
 
-    print 'fig saved to fig/topic/topic_tr_relation.png'
+    print 'fig saved to fig/topic/topic_tr_relation.pdf'
 
 
 def topic_values():
@@ -734,8 +734,8 @@ def topic_values():
         ax = axes[i/5,i%5]
         xs,ys = top_10_citation_dis_xys[topic]
         ax.plot(xs,ys)
-        ax.set_xlabel(u'引用次数',fontproperties='SimHei')
-        ax.set_ylabel(u'文章数量',fontproperties='SimHei')
+        ax.set_xlabel('$\#(c_i)$')
+        ax.set_ylabel('$p(\#(c_i))$')
 
         ax.set_xscale('log')
         ax.set_yscale('log')
@@ -751,8 +751,8 @@ def topic_values():
         ax = axes[i/5,i%5]
         xs,ys,high_ys,hr_ys,c10_ys = top_10_year_nums_xys[topic]
 
-        ax.plot(xs,ys,label=u'文章数量',linewidth=2)
-        ax.plot(xs,high_ys,label=u'高被引论文',c='g',linewidth=2)
+        ax.plot(xs,ys,label=u'文章数量',linewidth=1)
+        ax.plot(xs,high_ys,label=u'高被引论文',c='g',linewidth=1)
         ax.set_xlabel(u'年份',fontproperties='SimHei')
         ax.set_ylabel(u'文章数量',fontproperties='SimHei')
         ax.set_yscale('log')
@@ -760,8 +760,8 @@ def topic_values():
         ax.set_title(topic)
 
         ax2 = ax.twinx()
-        ax2.plot(xs,hr_ys,'--',label=u'高被引比例',c='r')
-        ax2.set_ylabel(u'高被引文文章比例',fontproperties='SimHei')
+        ax2.plot(xs,hr_ys,'--',label=u'高被引论文比例',c='r')
+        ax2.set_ylabel(u'比例',fontproperties='SimHei')
         ax2.tick_params(axis='y', labelcolor='r')
         ax2.legend(prop={'family':'SimHei','size':5})
 
@@ -1056,10 +1056,10 @@ if __name__ == '__main__':
 
     ## 主题转化率
     # gen_pid_topic_cits()
-    # trans_rate()
+    trans_rate()
 
     ## 价值系数分布
-    topic_values()
+    # topic_values()
 
     ## 作者主题选择概率
     # author_topic_selection()
